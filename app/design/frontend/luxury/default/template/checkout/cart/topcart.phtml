@@ -1,0 +1,31 @@
+<?php if (1 /*$this->getIsNeedToDisplaySideBar() */):?>
+<div class="col-md-4 col-sm-12 col-xs-12 cart-link ow-right-padding">
+	<svg width="16px" height="15px" viewBox="0 0 533.334 533.335">
+		<g>
+			<path d="M441.26,300.001c18.333,0,37.454-14.423,42.49-32.052l48.353-169.231c5.036-17.627-5.844-32.05-24.177-32.05H166.667   c0-36.819-29.848-66.667-66.667-66.667H0v66.667h100v283.333c0,27.614,22.386,50,50,50h316.667   c18.409,0,33.334-14.924,33.334-33.333s-14.925-33.334-33.334-33.334h-300v-33.333H441.26z M166.667,133.334h301.461l-28.573,100   H166.667V133.334z M200,491.668c0,22.916-18.75,41.666-41.667,41.666h-16.667c-22.917,0-41.667-18.75-41.667-41.666v-16.667   c0-22.917,18.75-41.667,41.667-41.667h16.667c22.917,0,41.667,18.75,41.667,41.667V491.668z M500,491.668   c0,22.916-18.75,41.666-41.667,41.666h-16.667c-22.916,0-41.666-18.75-41.666-41.666v-16.667c0-22.917,18.75-41.667,41.666-41.667   h16.667c22.917,0,41.667,18.75,41.667,41.667V491.668z"/>
+		</g>
+		</svg>
+		<?php $_cartQty = $this->getSummaryCount() ?>
+		<?php echo 'cart('.$_cartQty.')'; ?>
+	<div class="cart-dropdown">
+		<?php $_items = $this->getRecentItems() ?>
+		<?php if(count($_items)): ?>
+		<table>
+			<?php foreach($_items as $_item): ?>
+			<?php echo $this->getItemHtml($_item) ?>
+			<?php endforeach; ?>
+		</table>
+		<div class="sub-total">
+			<p><span>SubTotal</span><?php echo Mage::helper('checkout')->formatPrice($this->getSubtotal()) ?></p>
+			
+		</div>
+		<?php endif; ?>
+		<?php if($_cartQty && $this->isPossibleOnepageCheckout()): ?>
+		<div class="cart-button">
+			<a title="Carrinho" href="<?php echo $this->getUrl('checkout/cart'); ?>">Carrinho</a>
+			<a title="Finalizar" href="<?php echo $this->getUrl('checkout/onepage'); ?>">Finalizar</a>
+		</div>
+		<?php endif; ?>
+	</div>
+</div>
+<?php endif;  ?>

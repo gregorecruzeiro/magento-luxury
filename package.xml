@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package>
+    <name>amasty+extension-promotions-manager</name>
+    <version>1.0.2</version>
+    <stability>stable</stability>
+    <license>commercial</license>
+    <channel>fd934cff8f8c293d06ac0fa026214308</channel>
+    <extends/>
+    <summary>Promotions Manager by Amasty</summary>
+    <description>Promotions Manager adds vital rule data to the grid, such as the type of discount action and discount amount. The extension gives you a great overview of the discounts and enables you to easily analyze, manage the rules.</description>
+    <notes>Admin routing patch (SUPEE-6788) compatibility</notes>
+    <authors>
+        <author>
+            <name>Amasty Ltd.</name>
+            <user>MAG000001054</user>
+            <email>support@amasty.com</email>
+        </author>
+    </authors>
+    <date>2017-07-11</date>
+    <time>05:07:20</time>
+    <contents><target name="mageskin"><dir name="adminhtml"><dir name="default"><dir name="default"><dir name="images"><dir name="ambase"><file name="update.gif" hash="8342e11f7739fcfa25134707f0536ed6"/><file name="ok.gif" hash="a38bc2ee6e116e39c6e2e3013ee50f5e"/><file name="bad.gif" hash="b8379f1ba7ab552ca46b9d5fd0452345"/><file name="shop.png" hash="810bbb4f3e286627e211d5e6f7190257"/><file name="amasty.png" hash="95cb6c953c827c6e924dbcc2e0e3eaa0"/></dir></dir><dir name="css"><dir name="amasty"><dir name="ambase"><file name="style.css" hash="ecbdd48a8acd42d7aba5896c9029112f"/></dir></dir></dir></dir></dir></dir></target><target name="magelocal"><dir name="Amasty"><dir name="Base"><dir name="Helper"><file name="Module.php" hash="a29d80dcec46deafee25af6ac09ceefe"/><file name="Promo.php" hash="d515748dfe8e3f3c33a6c2d72ca5d121"/><file name="Data.php" hash="1bf6a054cff0b4f426f1931d38b42b55"/><file name="Utils.php" hash="346b9ef1bf95c09bc64be56cbb2d1f11"/></dir><dir name="Model"><dir name="Resource"><dir name="Event"><file name="Collection.php" hash="50f0322882d6baf0263c4fa5701c1d9f"/></dir></dir><file name="Conflict.php" hash="dc303d4c5b29d7562f01a0a76dd2a6fc"/><file name="Feed.php" hash="2a107e7edebe4d3171e091d408cbecb1"/></dir><dir name="etc"><file name="config.xml" hash="61183aca6ddd47a5a863c9042cfade2e"/><file name="system.xml" hash="8f1de48bd9ed997bb4a92eb4ac4b0d4f"/><file name="adminhtml.xml" hash="d12191b124d98f6436c91b82ec072546"/></dir><dir name="controllers"><dir name="Adminhtml"><dir name="Ambase"><file name="BaseController.php" hash="0af5a5beeca87f8ddacbee4c838b50d5"/></dir></dir></dir><dir name="sql"><dir name="ambase_setup"><file name="mysql4-install-1.0.0.php" hash="168c9d909e2c1fe42b4d56f3bb4ef5dd"/><file name="mysql4-upgrade-1.0.0-1.0.1.php" hash="5f5d8188d22fbd25eb4ec5dae51ecb85"/></dir></dir><dir name="Block"><file name="Conflicts.php" hash="0afed018bebb6c942fa99861d7d6a859"/><file name="Store.php" hash="46287f20ad40adbb2d1811d6bda64b15"/><file name="Extensions.php" hash="fcf8ad44a572b2cbc02e604684cbca4b"/><dir name="Adminhtml"><file name="Update.php" hash="eee228fcd3973fc7f773eaaa547871a2"/><file name="Promo.php" hash="6f1617bc143e997b212b669e4046b3cd"/><dir name="Debug"><file name="Event.php" hash="39aaed0bae4eb02932c05359cce5244b"/><file name="General.php" hash="b7f050990780dc23f2931e9767cf7546"/><file name="Base.php" hash="00dfa4b6836cfc1f705a360f81e53863"/><file name="Rewrite.php" hash="696955f882a16131add6ecd43940610e"/><file name="Conflict.php" hash="79415060b95d78427390f577a065d9be"/></dir></dir></dir></dir><dir name="Promocopy"><dir name="Helper"><file name="Data.php" hash="1c86ea71b2f4cb0bded3eae69205cf13"/></dir><dir name="etc"><file name="config.xml" hash="b50772ff2100e159a233fc4bd1e7dc81"/><file name="adminhtml.xml" hash="528aabdf09d1a95087b4f788f4480c40"/></dir><dir name="controllers"><dir name="Adminhtml"><dir name="Ampromocopy"><file name="IndexController.php" hash="4ac7a6207ecfae589a368bf1bf6a03fd"/></dir></dir></dir><dir name="Block"><dir name="Adminhtml"><dir name="Promo"><dir name="Quote"><file name="Grid.php" hash="33ff0330a178929ce9ab23e37ca9bbb1"/></dir></dir></dir></dir></dir></dir></target><target name="magelocale"><dir name="en_US"><file name="Amasty_Base.csv" hash="4d08e35129a4994680c81c4f93eee557"/></dir></target><target name="mageetc"><dir name="modules"><file name="Amasty_Promocopy.xml" hash="30ba7dabe8912c95d1114e4b260be49b"/><file name="Amasty_Base.xml" hash="8cf9992826d2c677f8a6ce31a6e66719"/></dir></target><target name="magedesign"><dir name="adminhtml"><dir name="default"><dir name="default"><dir name="layout"><dir name="amasty"><dir name="ambase"><file name="ambase.xml" hash="d0e491f6b3a95c1ddb741a0c91e93cec"/></dir></dir></dir><dir name="template"><dir name="amasty"><dir name="ambase"><file name="promo.phtml" hash="5086e6ed9ccfeb7dcbf36e4cb95539c1"/><file name="update.phtml" hash="a873edd334cbc9c27b9dc974285e6af3"/><dir name="debug"><file name="general.phtml" hash="46fbab3d92eee7ad76d77d5282b28d5c"/><file name="conflict.phtml" hash="efff5cc96e22b17374a605b2591d7da9"/><file name="rewrite.phtml" hash="fc58cef89a15e8aad2af42c55c27744d"/><file name="event.phtml" hash="1b5bd45f7078563c7949a5ed39c391f3"/></dir></dir></dir></dir></dir></dir></dir></target><target name="mageweb"><dir name="js"><dir name="amasty"><dir name="ambase"><file name="store.js" hash="af39fe63cf0adafe6d2d9b60ac4bdbb4"/></dir></dir></dir></target></contents>
+    <compatible/>
+    <dependencies>
+        <required>
+            <php>
+                <min>5.2.0</min>
+                <max>7.0.0</max>
+            </php>
+        </required>
+    </dependencies>
+</package>

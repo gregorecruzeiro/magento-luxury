@@ -1,0 +1,13 @@
+<?php
+/**
+ *
+ * @category   Inovarti
+ * @package    Inovarti_Onestepcheckout
+ * @author     Suporte <suporte@inovarti.com.br>
+ */
+?>
+
+<label for="<?php echo $this->getFieldId('ie')?>"<?php if ($this->isRequired()) {echo ' class="required col-md-12"';}else{echo ' class="col-md-12"';} ?>><?php if ($this->isRequired()) echo '<em>*</em>' ?><?php echo $this->__('IE (Inscrição Estadual)') ?></label>
+<div class="input-box col-md-12">
+    <input type="text" id="<?php echo $this->getFieldId('ie')?>" name="<?php echo $this->getFieldName('ie')?>" title="<?php echo $this->__('IE (Inscrição Estadual)') ?>" class="form-control" value="<?php echo $this->getCustomer()->getIe(); ?>" />
+</div>

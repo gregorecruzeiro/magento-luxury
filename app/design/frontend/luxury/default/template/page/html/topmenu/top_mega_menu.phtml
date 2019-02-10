@@ -1,0 +1,110 @@
+<?php 
+$currentCategory = Mage::registry('current_category');
+$root_cat = Mage::app()->getStore($storeId)->getRootCategoryId();
+$_rootCategory = Mage::getModel('catalog/category')->load($root_cat);
+if(isset($arr)){
+	unset($arr);
+}
+$arr = array();
+if(!$currentCategory) {	
+	$_subcategories = $_rootCategory->getChildrenCategories();
+	if (count($_subcategories) > 0) {
+		$i = 0;
+		foreach ($_subcategories as $_subcategory) {
+			$arr[$i] = $_subcategory;
+			$i++;
+		}
+	}
+}else {
+	$parentId = $currentCategory->getParentId();
+	$parentCat = Mage::getModel('catalog/category')->load($parentId);
+	$_subcategories = $parentCat->getChildrenCategories();
+	$currentChild = $currentCategory->getChildrenCategories();
+	if(count($currentChild) > 0){
+		if (count($_subcategories) > 0) {
+			$i = 0;
+			foreach ($_subcategories as $_subcategory) {
+				$arr[$i] = $_subcategory;
+				$i++;
+			}
+		}
+	}else {	
+		if($parentId == $root_cat) {
+			$_subcategories = $_rootCategory->getChildrenCategories();
+			if (count($_subcategories) > 0) {
+				$i = 0;
+				foreach ($_subcategories as $_subcategory) {
+					$arr[$i] = $_subcategory;	
+					$i++;
+				}
+			}			
+		}else {
+			$_grandCatId = $parentCat->getParentId();
+			$_grandCat = Mage::getModel('catalog/category')->load($_grandCatId);
+			$_subcategories = $_grandCat->getChildrenCategories();
+			if(count($_subcategories) > 0){
+				$i = 0;
+				foreach ($_subcategories as $_subcategory) {
+					$arr[$i] = $_subcategory;
+					$i++;					
+				}
+			}
+		}
+	}
+}
+?>
+
+<li class="col-md-3 col-sm-6">
+	<?php $i=0;foreach($arr as $cat): ?>
+		<?php if(($i % 3) == 0): ?>
+			<ul>
+			<li class="dropdown-header"><a href="<?php echo $cat->getUrl(); ?>"><?php echo $cat->getName(); ?></a></li>
+			<?php $subCat = $cat->getChildrenCategories(); ?>
+			<?php if(count($subCat) > 0): ?>
+				<?php foreach($subCat as $descCat): ?>
+				<li><a href="<?php echo $descCat->getUrl(); ?>"><?php echo $descCat->getName(); ?></a></li>
+				<?php endforeach; ?>
+			<?php endif; ?>
+			<li class="divider"></li>
+			</ul>
+		<?php endif; ?>
+		<?php $i++; ?>
+	<?php endforeach; ?>
+</li>
+<li class="col-md-3 col-sm-6">
+	<?php $i=0;foreach($arr as $cat): ?>
+		<?php if(($i % 3) == 1): ?>
+			<ul>
+			<li class="dropdown-header"><a href="<?php echo $cat->getUrl(); ?>"><?php echo $cat->getName(); ?></a></li>
+			<?php $subCat = $cat->getChildrenCategories(); ?>
+			<?php if(count($subCat) > 0): ?>
+				<?php foreach($subCat as $descCat): ?>
+				<li><a href="<?php echo $descCat->getUrl(); ?>"><?php echo $descCat->getName(); ?></a></li>
+				<?php endforeach; ?>
+			<?php endif; ?>
+			<li class="divider"></li>
+			</ul>
+		<?php endif; ?>
+		<?php $i++; ?>
+	<?php endforeach; ?>
+</li>
+<li class="col-md-3 col-sm-6">
+	<?php $i=0;foreach($arr as $cat): ?>
+		<?php if(($i % 3) == 2): ?>
+			<ul>
+			<li class="dropdown-header"><a href="<?php echo $cat->getUrl(); ?>"><?php echo $cat->getName(); ?></a></li>
+			<?php $subCat = $cat->getChildrenCategories(); ?>
+			<?php if(count($subCat) > 0): ?>
+				<?php foreach($subCat as $descCat): ?>
+				<li><a href="<?php echo $descCat->getUrl(); ?>"><?php echo $descCat->getName(); ?></a></li>
+				<?php endforeach; ?>
+			<?php endif; ?>
+			<li class="divider"></li>
+			</ul>
+		<?php endif; ?>
+		<?php $i++; ?>
+	<?php endforeach; ?>
+</li>
+
+
+

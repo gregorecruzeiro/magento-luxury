@@ -1,0 +1,45 @@
+<!-- Category Section -->
+<?php
+	$storeId = Mage::app()->getStore()->getStoreId();
+	$rootCategoryId = Mage::app()->getStore($storeId)->getRootCategoryId();
+/* 	$_categories = Mage::getModel('catalog/category')->getCollection()
+					->setStoreId($storeId)
+					->addAttributeToFilter('level', 3)
+                     ->addAttributeToSelect('name')
+                     ->addAttributeToSelect('is_active')
+					 ->addAttributeToSelect('image')
+                     ->addUrlRewriteToResult(); */
+	$_categories = Mage::getModel('catalog/category')->getCollection()
+		->setStoreId($storeId)
+		->addAttributeToFilter('level', 2)
+		->addFieldToFilter('is_active', 1)
+		->addAttributeToFilter('path', array('like' => "1/{$rootCategoryId}/%"))
+		->addAttributeToSelect('*');			 
+?>	
+			 
+<div id="category-section" class="category-section bottom-shadow <?php echo ' '.$storeId; ?>">
+<h1 class="no-display"><?php echo $this->getLayout()->getBlock('head')->getTitle(); ?></h1>
+	<!-- container -->
+	<div class="container">
+		<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('luxury_home_cat_header')->toHtml() ?>
+		<div class="category-box-main categories-slider">
+			<!-- Owl Carousel -->
+			<div id="categories-list" class="owl-carousel owl-theme our-partner">
+				<?php foreach($_categories as $_category): ?>
+				<?php if ($_category->getIsActive()): ?>
+				<div class="item">
+					<div class="category-box">
+						<span class="sale">+<?php echo $_category->getProductCount(); ?></span>
+						<a title="<?php echo $_category->getName(); ?>" href="<?php echo $_category->getUrl($_category); ?>">
+							<img src="<?php echo $_category->getImageUrl(); ?>" alt="cat-img"  width="291" height="291"/>
+							<span><?php echo $_category->getName(); ?></span>
+							<div class="cat-hover"></div>
+						</a>
+					</div>			
+				</div>
+				<?php endif; ?>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	</div><!-- container /- -->
+</div><!-- Category Section /- -->

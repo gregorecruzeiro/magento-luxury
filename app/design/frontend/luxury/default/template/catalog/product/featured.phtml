@@ -1,0 +1,126 @@
+<?php /* $featured_products = $this->getFeaturedProducts();  */
+	$design = Mage::helper('themesetting')->getCfgSectionDesign();
+	$label_new = $design['product_labels']['new'];
+	$label_sale = $design['product_labels']['sale'];
+		$storeId = Mage::app()->getStore()->getStoreId();
+		$resource = Mage::getSingleton('core/resource');
+		$read = $resource->getConnection('catalog_read');
+		$productEntityIntTable = (string)Mage::getConfig()->getTablePrefix() . 'catalog_product_entity_int';
+		$eavAttributeTable = $resource->getTableName('eav/attribute');
+		$categoryProductTable = $resource->getTableName('catalog/category_product');
+ 
+		$select = $read->select()
+						->distinct(true)
+						->from(array('cp'=>$categoryProductTable), 'product_id')
+						->join(array('pei'=>$productEntityIntTable), 'pei.entity_id=cp.product_id', array())
+						->joinNatural(array('ea'=>$eavAttributeTable))
+						->where('pei.value=1')
+						->where('ea.attribute_code="featured"');
+ 
+		$featured_products = $read->fetchAll($select);
+		
+/* 	        $featured_products = Mage::getModel('catalog/product')->getCollection()
+            ->addAttributeToSelect('*')
+            ->setStoreId($storeId)
+            ->addStoreFilter($storeId)
+            ->addAttributeToFilter('featured', array('eq' => '1'))
+			->setPageSize(8)
+			->setCurPage(1)
+			->load(); */
+			//zend_debug::dump($featured_products);
+?>
+<?php $_collectionSize = count($featured_products) ?>
+<?php if($_collectionSize > 0): ?>
+	<?php shuffle($featured_products); ?>
+	<Section id="featured-products" class="featured-products bottom-shadow">
+	<div class="container">
+		<div class="section-header">
+			<h3><?php echo $this->__('Featured Products') ?></h3>
+			<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('luxury_home_feature_header')->toHtml() ?>
+		</div><!-- Section Header /- -->
+				<?php 
+					$i=0; 
+					foreach ($featured_products as $_res): ?>
+						<?php $_product = Mage::getModel('catalog/product')->load($_res['product_id']); ?>
+						<?php if(in_array($storeId, $_product->getStoreIds())){ ?>
+						
+						<?php if($i < 8): ?>
+						<?php if ($i++%4==0): ?><div class="category-box-main product-box-main"><?php endif ?>
+						<div class="col-md-3 col-sm-6 col-xs-6 main-product">
+							<div class="category-box product-box">
+								<?php   
+									$now = date('Y-m-d');
+									$newsFrom= substr($_product->getData('news_from_date'),0,10);
+									$newsTo=  substr($_product->getData('news_to_date'),0,10);
+								?>
+								<?php if(($_product->getFinalPrice() < $_product->getPrice())&&($label_sale == 1)): ?>
+									<span class="sale">sales</span>
+								<?php elseif((($now>=$newsFrom && $now<=$newsTo)||($now>=$newsFrom && $newsFrom!='' && $newsTo=='' ))&&($label_new == 1)): ?>
+									<span class="new">new</span>
+								<?php endif; ?>
+								<div class="inner-product op-1a">
+									<?php if($_product->getFinalPrice() < $_product->getPrice()): ?>
+									<span class="tag-promo"><img src="/loja/media/wysiwyg/promo-label.png" title="" alt=""></span>
+									<?php endif; ?>
+									<img class="product-image" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(292, 292); ?>" width="292" height="292" alt="<?php echo $this->htmlEscape($_product->getName()) ?>" />
+									<div class="product-box-inner">
+										<ul>
+											<li></li>
+											<?php if ($this->helper('wishlist')->isAllow()) : ?>
+												<li><a href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><i class="fa fa-heart"></i></a></li>
+											<?php endif; ?>
+                      <li><a title="<?php echo $this->htmlEscape($_product->getName()) ?>" href="<?php echo $_product->getProductUrl() ?>" ><i class="fa fa-eye"></i></a></li>
+										</ul>
+										<?php if($_product->isSaleable()): ?>
+											<?php if($_product->isConfigurable()){?>
+												<a title="<?php echo $this->__('Add to Cart') ?>"  href="<?php echo $_product->getProductUrl() ?>" class="btn gbtn"><?php echo $this->__('Add to Cart') ?></a>
+											<?php }else{ ?>
+												<a title="<?php echo $this->__('Add to Cart') ?>" class="btn gbtn" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><?php echo $this->__('Add to Cart') ?></a>
+											<?php } ?>
+										<?php else: ?>
+											<a class="availability out-of-stock btn"><?php echo $this->__('Out of stock') ?></a>
+										<?php endif; ?>
+									</div>
+								</div>
+							</div>
+							<a class="product-name product-title" href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_product->getName()) ?>)"><?php echo $this->htmlEscape($_product->getName()) ?></a>
+							<?php echo $RatingOb = Mage::getModel('rating/rating')->getEntitySummary($_product->getId());
+								$ratings=$RatingOb->getSum()/$RatingOb->getCount();
+							?>
+							<?php /*if($ratings): ?>
+							<div class="ratings">
+								<div class="rating-box">
+									<div class="rating" style="width:<?php echo $ratings; ?>%"></div>
+								</div>
+							</div>
+							<?php else: ?>
+							<div class="ratings">
+								<div class="rating-box">
+									<div class="rating" style="width:0%"></div>
+								</div>
+							</div>
+							<?php endif;*/ ?>
+							<?php
+								$formattedPrice = Mage::helper('core')->currency($_product->getPrice(), true, false);
+								$formattedFinalPrice = Mage::helper('core')->currency($_product->getFinalPrice(), true, false);
+							?>
+							<?php if($_product->getFinalPrice() < $_product->getPrice()): ?>
+								<span class="amount"><del><?php echo $formattedPrice ?></del>&nbsp;<?php echo $formattedFinalPrice ?></span>
+							<?php else: ?>
+								<span class="amount"><?php echo $formattedFinalPrice ?></span>
+							<?php endif; ?>
+						</div>
+						<?php if (($i%4==0) || ($i==$_collectionSize)): ?></div><?php endif ?>
+						<?php endif; ?>
+						<?php } ?>
+						
+					<?php endforeach ?>
+ 
+					<?php for($i;$i%4!=0;$i++): ?>&nbsp;<?php endfor ?>
+					<?php if ($i%4==0): ?>&nbsp;<?php endif ?>
+			
+			<script type="text/javascript">decorateTable('product-list-table')</script>
+	</div>
+	
+	</section>
+<?php endif; ?>

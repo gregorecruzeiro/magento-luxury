@@ -1,0 +1,97 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php if(count($this->getItemCollection()->getItems())): ?>
+<?php $_columnCount = $this->getColumnCount(); ?>
+<div class="page-header ow-bottom-padding categories">
+	<h3><span><?php echo $this->__('You may also be interested in') ?></span><?php echo $this->__('the following product(s)') ?></h3>
+</div>
+<div class="box-collateral box-up-sell category-box-main product-box-main">
+    <?php // $this->setColumnCount(5); // uncomment this line if you want to have another number of columns. also can be changed in layout ?>
+    <?php $this->resetItemsIterator() ?>
+    <?php foreach ($this->getItemCollection()->getItems() as $_link): ?>
+    <?php /*for($_i=0;$_i<$this->getRowCount();$_i++): ?>
+        <tr>
+        <?php for($_j=0;$_j<$this->getColumnCount();$_j++): ?>
+            <?php if($_link=$this->getIterableItem()): */ ?>
+        <div class="col-md-6 col-sm-6 col-xs-6 main-product">
+			<div class="category-box product-box">
+				<div class="inner-product op-4">
+					<img src="<?php echo $this->helper('catalog/image')->init($_link, 'thumbnail')->resize(292) ?>" alt="<?php echo $this->escapeHtml($_link->getName()) ?>" />
+					<div class="product-box-inner">
+						<ul>
+							<li><a title="Product" href="<?php echo $this->helper('catalog/image')->init($_link, 'thumbnail')->resize(500) ?>"><i class="fa fa-eye"></i></a></li>
+							<li><a title="Heart Icon" href="<?php echo $this->helper('wishlist')->getAddUrl($_link) ?>"><i class="fa fa-heart"></i></a></li>
+						</ul>
+						<?php if($_link->isSaleable()): ?>
+							<a title="<?php echo $this->__('Add to Cart') ?>" href="#" class="btn gbtn" onclick="setLocation('<?php echo $this->getAddToCartUrl($_link) ?>')"><?php echo $this->__('Add to Cart') ?></a>
+						<?php else: ?>
+							<a class="availability out-of-stock btn"><?php echo $this->__('Out of stock') ?></a>
+						<?php endif; ?>									
+					</div>							
+				</div>
+			</div>		
+			<a title="<?php echo $this->escapeHtml($_link->getName()) ?>" href="<?php echo $_link->getProductUrl() ?>" class="product-title"><?php echo $this->escapeHtml($_link->getName()) ?></a>
+			<?php echo $RatingOb = Mage::getModel('rating/rating')->getEntitySummary($_link->getId());
+				$ratings=$RatingOb->getSum()/$RatingOb->getCount();
+			?>
+			<?php if($ratings): ?>
+			<div class="ratings">
+				<div class="rating-box">
+					<div class="rating" style="width:<?php echo $ratings; ?>%"></div>
+				</div>
+			</div>
+			<?php else: ?>
+			<div class="ratings">
+				<div class="rating-box">
+					<div class="rating" style="width:0%"></div>
+				</div>
+			</div>
+			<?php endif; ?>	
+			<?php
+				$formattedPrice = Mage::helper('core')->currency($_link->getPrice(), true, false);
+				$formattedFinalPrice = Mage::helper('core')->currency($_link->getFinalPrice(), true, false);
+			?>
+			<?php if($_link->getFinalPrice() < $_link->getPrice()): ?>
+				<span class="amount"><del><?php echo $formattedPrice ?></del>&nbsp;<?php echo $formattedFinalPrice ?></span>
+			<?php else: ?>
+				<span class="amount"><?php echo $formattedFinalPrice ?></span>
+			<?php endif; ?>	 
+		</div>
+            <?php /*else: ?>
+            <td class="empty">&nbsp;</td>
+            <?php endif; ?>
+        <?php endfor; ?>
+        </tr>
+    <?php endfor; */?>
+    <?php endforeach; ?>
+    
+    <?php /*
+    <script type="text/javascript">decorateGeneric($$('#upsell-product-table'), ['odd','even','first','last'])</script>
+    */ ?>
+	
+</div>
+<?php endif ?>

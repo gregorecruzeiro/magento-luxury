@@ -1,0 +1,12 @@
+<?php 
+	$currentCategory = Mage::registry('current_category');	
+?>
+<ul class="categories-list">
+	<?php if($currentCategory): ?>
+	<?php if($parentId = $currentCategory->getParentId()): ?>
+	<?php $parentCat = Mage::getModel('catalog/category')->load($parentId); ?>
+	<li><a title="<?php echo $parentCat->getName(); ?>" href="<?php echo $parentCat->getUrl(); ?>"><?php echo $parentCat->getName(); ?></a></li>
+	<?php endif; ?>
+	<li><a title="<?php echo $currentCategory->getName(); ?>" href="<?php echo $currentCategory->getUrl(); ?>"><?php echo $currentCategory->getName(); ?></a></li>
+	<?php endif; ?>
+</ul>

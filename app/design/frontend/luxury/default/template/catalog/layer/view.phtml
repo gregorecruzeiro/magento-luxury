@@ -1,0 +1,109 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     rwd_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Category layered navigation
+ *
+ * @see Mage_Catalog_Block_Layer_View
+ */
+?>
+<?php 
+	$max_price = $maxPrice=Mage::getSingleton('catalog/layer')
+			->setCurrentCategory(Mage::registry('current_category'))
+			->getProductCollection()
+			->getMaxPrice();
+?>
+<span style="display: none;" id="lx-f-price-max"><?php echo $max_price; ?></span>
+<span style="display: none;" id="lx-f-cur-rate"><?php echo Mage::app()->getStore()->getCurrentCurrencyRate(); ?></span>
+<span style="display: none;" id="lx-f-cur"><?php echo Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?></span>
+<?php if($this->canShowBlock()): ?>
+<div class="product-filter block block-layered-nav<?php if (!$this->getLayer()->getState()->getFilters()): ?> block-layered-nav--no-filters<?php endif; ?>">
+<div class="container">
+    <div class="product-filter-box bottom-shadow">
+		<div class="col-md-4">
+			<div id="slider-range"></div>
+			<div class="price-input">
+				<label>or </label>
+				<input type="text" id="amount">
+				<label>to </label>
+				<input type="text" id="amount2">
+			</div>
+		</div>
+		<div class="col-md-8 no-padding">
+		
+		<form>
+        <?php if($this->canShowOptions()): 
+            $d = 0;$price = 0;
+            $_filters = $this->getFilters();
+            foreach ($_filters as $_filter){
+                if($_filter->getItemsCount()){
+                    $d++;
+					if($_filter->getName() == 'Price') {
+						$price =1;
+					}
+                }
+
+            }		
+			$d -= $price;
+			$col = ($d == 3) ? 6 : floor(24/$d);
+		?>
+		<?php $_filters = $this->getFilters() ?>
+		<?php $i=0;foreach ($_filters as $_filter): ?>
+			<?php if($_filter->getItemsCount()): ?>
+			<?php if($_filter->getName() != 'Price'): ?>
+			<?php if(($i++ %2)==0): ?>
+				<div class="<?php echo 'col-md-'.$col.' col-sm-'.$col; ?> no-padding">
+				<div class="product-search-option <?php if((($d == $i)&&(($d % 2) == 1))||(($d == $i+1)&&(($d % 2) == 0))){echo 'div-filter-border';} ?>">
+			<?php endif;?>
+            <div class="from-group">     
+				<select class="form-control minimal s-filter">
+					<option value="selected"><?php echo $this->__($_filter->getName()) ?></option>
+					<?php echo $_filter->getHtml() ?>
+				</select> 
+            </div>
+			<?php if((($i %2)==0) || ($d == $i)): ?>
+				<?php if(($d == $i)&&(($d % 2) == 1)): ?>
+					<div class="from-group" id="narrow-by-list"> 
+						<select class="form-control minimal s-filter">
+							<option value="selected"><?php echo $this->__('Choose Option') ?></option>
+						</select> 
+					</div>
+				<?php endif; ?>
+				</div></div>
+			<?php endif;?>
+			<?php endif; ?>
+			<?php endif; ?>
+		<?php endforeach; ?>
+            <script type="text/javascript">decorateDataList('narrow-by-list')</script>
+        <?php endif; ?>
+		</form>
+		</div>
+    </div>
+	<?php echo $this->getStateHtml() ?>
+</div>
+</div>
+<?php endif; ?>

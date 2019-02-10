@@ -1,0 +1,57 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<!-- News Letter -->
+<div id="news-letter-section" class="news-letter-section">			
+	<!-- container -->
+	<div class="container">
+		<!-- Section Header -->
+		<div class="section-header">
+			<h3><?php echo $this->__('Sign up for our Newsletter') ?></h3>				
+		</div><!-- Section Header /- -->
+		<!-- col-md-3 -->
+		<div class="col-md-3"></div><!-- col-md-3 /- -->
+		<!-- col-md-6 -->
+		<div class="col-md-6">
+			<form class="navbar-form" action="<?php echo $this->getFormActionUrl() ?>" method="post" id="newsletter-validate-detail">
+				<div class="form-group" >
+					<svg viewBox="0 0 485.211 485.211">
+						<path d="M485.211,363.906c0,10.637-2.992,20.498-7.785,29.174L324.225,221.67l151.54-132.584   c5.895,9.355,9.446,20.344,9.446,32.219V363.906z M242.606,252.793l210.863-184.5c-8.653-4.737-18.397-7.642-28.908-7.642H60.651   c-10.524,0-20.271,2.905-28.889,7.642L242.606,252.793z M301.393,241.631l-48.809,42.734c-2.855,2.487-6.41,3.729-9.978,3.729   c-3.57,0-7.125-1.242-9.98-3.729l-48.82-42.736L28.667,415.23c9.299,5.834,20.197,9.329,31.983,9.329h363.911   c11.784,0,22.687-3.495,31.983-9.329L301.393,241.631z M9.448,89.085C3.554,98.44,0,109.429,0,121.305v242.602   c0,10.637,2.978,20.498,7.789,29.174l153.183-171.44L9.448,89.085z"/>
+					</svg>
+					<input type="text" name="email" id="newsletter" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Sign up for our newsletter')) ?>" class="form-control" placeholder="your-email@website.com" required />
+				</div>
+				<button type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Subscribe')) ?>" class="btn btn-default"><?php echo $this->__('Submit') ?></button>
+			</form>
+			<script type="text/javascript">
+			//<![CDATA[
+				var newsletterSubscriberFormDetail = new VarienForm('newsletter-validate-detail');
+			//]]>
+			</script>
+		</div><!-- col-md-6 /- -->
+		<!-- col-md-3 --><div class="col-md-3"></div><!-- col-md-3 /- --> 
+	</div><!-- container /- -->
+</div>

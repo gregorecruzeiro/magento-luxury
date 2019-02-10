@@ -1,0 +1,186 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Top menu for store
+ *
+ * @see Mage_Page_Block_Html_Topmenu
+ */
+
+$currentCategory = Mage::registry('current_category');
+$root_cat = Mage::app()->getStore($storeId)->getRootCategoryId();
+$_rootCategory = Mage::getModel('catalog/category')->load($root_cat);
+if(isset($arr)){
+	unset($arr);
+}
+$arr = array();
+if(!$currentCategory) {	
+	$_subcategories = $_rootCategory->getChildrenCategories();
+	if (count($_subcategories) > 0) {
+		$i = 0;
+		foreach ($_subcategories as $_subcategory) {
+			$arr[$i] = $_subcategory;
+			$i++;
+		}
+	}
+}else {
+	$parentId = $currentCategory->getParentId();
+	$parentCat = Mage::getModel('catalog/category')->load($parentId);
+	$_subcategories = $parentCat->getChildrenCategories();
+	$currentChild = $currentCategory->getChildrenCategories();
+	if(count($currentChild) > 0){
+		if (count($_subcategories) > 0) {
+			$i = 0;
+			foreach ($_subcategories as $_subcategory) {
+				$arr[$i] = $_subcategory;
+				$i++;
+			}
+		}
+	}else {	
+		if($parentId == $root_cat) {
+			$_subcategories = $_rootCategory->getChildrenCategories();
+			if (count($_subcategories) > 0) {
+				$i = 0;
+				foreach ($_subcategories as $_subcategory) {
+					$arr[$i] = $_subcategory;	
+					$i++;
+				}
+			}			
+		}else {
+			$_grandCatId = $parentCat->getParentId();
+			$_grandCat = Mage::getModel('catalog/category')->load($_grandCatId);
+			$_subcategories = $_grandCat->getChildrenCategories();
+			if(count($_subcategories) > 0){
+				$i = 0;
+				foreach ($_subcategories as $_subcategory) {
+					$arr[$i] = $_subcategory;
+					$i++;					
+				}
+			}
+		}
+	}
+}
+?>
+
+
+	<div class="menu-block">
+		<!-- container -->
+		<div class="container">
+			<nav class="navbar navbar-default navbar-static-top">						
+				<div class="navbar-header">
+					<a href="<?php echo $this->getUrl('') ?>" class="logo"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>wysiwyg/media/logo.png" alt="logo" width="110"></a>
+					<button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+						<span class="sr-only"><?php echo $this->__('Toggle navigation') ?></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>							
+					</button>								
+				</div>
+				<div class="navbar-collapse collapse" id="navbar">
+					<ul class="nav navbar-nav">
+
+							<?php foreach($arr as $cat): ?>
+								<?php $subCat = $cat->getChildrenCategories(); ?>
+
+									<li class="<?php if(count($subCat) > 0){ echo "dropdown"; } else { echo ""; } ?>">
+
+										<?php if(count($subCat) > 0): ?>
+										<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo $cat->getName(); ?></a>
+										<?php else: ?>
+										<a href="<?php echo $cat->getUrl(); ?>"><?php echo $cat->getName(); ?></a>
+										<?php endif ?>
+
+											<?php if(count($subCat) > 0): ?>
+												<ul class="dropdown-menu">
+												<?php foreach($subCat as $descCat): ?>
+													<li>
+														<a href="<?php echo $descCat->getUrl(); ?>"><?php echo $descCat->getName(); ?></a>
+													</li>
+												<?php endforeach; ?>
+												</ul>
+											<?php endif; ?>
+									</li>
+						
+								
+							<?php endforeach; ?>
+					</ul>
+				</div>
+			</nav>
+		</div>
+	</div>
+
+
+
+
+
+
+
+						
+
+<?php /** <div class="menu-block">
+	<!-- container -->
+	<div class="container">
+		<nav class="navbar navbar-default navbar-static-top">						
+			<div class="navbar-header">
+				<a href="<?php echo $this->getUrl('') ?>" class="logo"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>wysiwyg/media/logo.png" alt="logo" width="110"></a>
+				<button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+					<span class="sr-only"><?php echo $this->__('Toggle navigation') ?></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>							
+				</button>								
+			</div>
+			<div class="navbar-collapse collapse" id="navbar">
+				<ul class="nav navbar-nav">
+					<li><a title="Home" href="<?php echo Mage::getBaseUrl(); ?>"><?php echo $this->__('Home') ?></a></li>
+					
+					<!--li class="dropdown">
+						<a title="Shop" href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->__('Shop') ?></a>
+						<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('luxury_submenu_shop')->toHtml() ?>
+					</li-->							
+					<li class="dropdown mega-dropdown">
+						<a title="Produtos" href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->__('Produtos') ?>
+
+						</a>								
+						<ul class="dropdown-menu mega-dropdown-menu row">
+							<?php echo $this->getChildHtml('top_new_slider') ?>
+							<?php echo $this->getChildHtml('top_mega_menu') ?>								
+						</ul>
+					</li>										
+					<li><a title="Empresa" href="<?php echo $this->getUrl('', array('_direct'=>'empresa')); ?>"><?php echo $this->__('About Us') ?></a></li>
+					<li class="dropdown">
+						<a title="Paginas" href="about.html" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->__('Informações') ?></a>
+						<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('luxury_submenu_pages')->toHtml() ?>
+					</li>
+					<li><a title="Contato" href="<?php echo $this->getUrl('', array('_direct'=>'contato')); ?>"><?php echo $this->__('Contact us') ?></a></li>								
+				</ul>
+			</div>
+		</nav>
+	</div>
+</div>
+**/
+?>

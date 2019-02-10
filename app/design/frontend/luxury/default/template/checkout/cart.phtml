@@ -1,0 +1,143 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Shopping cart template
+ *
+ * @see Mage_Checkout_Block_Cart
+ */
+?>
+<div class="page-header bottom-shadow">
+	<h1 class="lx-h1"><?php echo $this->__('Shopping Cart') ?></h1>
+	<p><?php echo Mage::helper('checkout/cart')->getCart()->getItemsCount(); ?><?php echo $this->__(' Products Selected') ?></p>
+</div>
+    <?php echo $this->getMessagesBlock()->toHtml() ?>
+    <?php echo $this->getChildHtml('form_before') ?>
+<div class="cart page-wizard shopping-cart shopping-product-table">
+    <div class="page-title title-buttons no-display">
+        <?php if(!$this->hasError()): ?>
+        <ul class="checkout-types">
+        <?php foreach ($this->getMethods('top_methods') as $method): ?>
+            <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+            <li><?php echo $methodHtml; ?></li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        </ul>
+        <?php endif; ?>
+    </div>
+
+	<div class="container">
+    <form action="<?php echo $this->getFormActionUrl() ?>" method="post">
+        <?php echo $this->getBlockHtml('formkey'); ?>
+        <div class="shopping-cart-table bottom-shadow col-md-12 col-sm-12">
+            <table id="shopping-cart-table" class="data-table cart-table shop_table cart">
+
+            <?php $mergedCells = ($this->helper('tax')->displayCartBothPrices() ? 2 : 1); ?>
+			<?php //$mergedCells =2 ?>
+                <thead>
+                    <tr>
+                        <th class="product-name"><?php echo $this->__('Product') ?></th>
+						<th class="product-description"><?php echo $this->__('Description') ?></th>
+						<?php if ($this->helper('wishlist')->isAllowInCart()) : ?>
+							<th class="product-wishlist"><?php echo $this->__('Wishlist') ?></th>
+						<?php endif ?>
+						<th class="product-price" colspan="<?php echo $mergedCells; ?>"><?php echo $this->__('Price') ?><?php if($mergedCells == 2) echo '(Ex.Tax/In.Tax)'; ?></th>
+						<th class="product-quantity"><?php echo $this->__('Quantity') ?></th>
+						<th class="product-subtotal" colspan="<?php echo $mergedCells; ?>"><?php echo $this->__('Subtotal') ?><?php if($mergedCells == 2) echo '(Ex.Tax/In.Tax)'; ?></th>
+						<th class="product-change"><?php echo $this->__('edit/delete') ?></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <td colspan="50" class="a-right">
+                            <?php if($this->getContinueShoppingUrl()): ?>
+                                <button type="button" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Continue Shopping')) ?>" class="button btn-continue lx-button-custom " onclick="setLocation('<?php echo Mage::helper('core')->quoteEscape($this->getContinueShoppingUrl()) ?>')"><?php echo $this->__('Continue') ?></button>
+                            <?php endif; ?>
+                            <button type="submit" name="update_cart_action"  value="update_qty" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Update Shopping Cart')); ?>" class="button btn-update lx-button-custom "><?php echo $this->__('Update'); ?></button>
+                            <button type="submit" name="update_cart_action" value="empty_cart" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Clear Shopping Cart')); ?>" class="button btn-empty lx-button-custom " id="empty_cart_button"><?php echo $this->__('Clear'); ?></button>
+                            <!--[if lt IE 8]>
+                            <input type="hidden" id="update_cart_action_container" />
+                            <script type="text/javascript">
+                            //<![CDATA[
+                                Event.observe(window, 'load', function()
+                                {
+                                    // Internet Explorer (lt 8) does not support value attribute in button elements
+                                    $emptyCartButton = $('empty_cart_button');
+                                    $cartActionContainer = $('update_cart_action_container');
+                                    if ($emptyCartButton && $cartActionContainer) {
+                                        Event.observe($emptyCartButton, 'click', function()
+                                        {
+                                            $emptyCartButton.setAttribute('name', 'update_cart_action_temp');
+                                            $cartActionContainer.setAttribute('name', 'update_cart_action');
+                                            $cartActionContainer.setValue('empty_cart');
+                                        });
+                                    }
+
+                                });
+                            //]]>
+                            </script>
+                            <![endif]-->
+                        </td>
+                    </tr>
+                </tfoot>
+                <tbody>
+                <?php foreach($this->getItems() as $_item): ?>
+                    <?php echo $this->getItemHtml($_item) ?>
+                <?php endforeach ?>
+                </tbody>
+            </table>
+            <script type="text/javascript">decorateTable('shopping-cart-table')</script>
+        </div>
+    </form>
+	</div>
+</div>
+<div class="shopping-cart-estimate">
+	<div class="container">
+	<div class="row">
+	<div class="cart-box col-xs-12 col-sm-12 col-md-10 col-lg-8">
+        <div class="ship-checkout">
+    		<?php echo $this->getChildHtml('crosssell') ?>
+    		<?php echo $this->getChildHtml('checkout.cart.extra') ?>
+    		<?php if (!$this->getIsVirtual()): echo $this->getChildHtml('shipping'); endif; ?>
+        </div>
+        <div class="totals estimate-details shopping-cart-table">
+            <?php echo $this->getChildHtml('totals'); ?>
+            <?php if(!$this->hasError()): ?>
+            <ul class="checkout-types">
+            <?php foreach ($this->getMethods('methods') as $method): ?>
+                <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+                <li><?php echo $methodHtml; ?></li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            </ul>
+            <?php endif; ?>
+        </div>
+	</div>
+
+	</div>
+	</div>
+</div>

@@ -1,0 +1,35 @@
+	<!-- Footer Section -->
+	<div id="footer-section" class="footer-section">
+		<?php echo $this->getChildHtml('luxury_banner') ?>
+		<!-- informational-icons -->
+		<?php echo $this->getChildHtml('luxury_info_footer') ?>
+		
+		<!-- widget section -->
+		<div class="widget-section bottom-shadow">
+			<!-- container -->
+			<div class="container">
+				<!-- widget about -->
+				
+				<?php echo $this->getChildHtml('luxury_footer_column1') ?>
+				<!-- widget about /- -->
+				
+				<?php echo $this->getChildHtml('luxury_footer_column2') ?>
+				
+				<aside class="col-md-3 col-sm-3 widget widget_facebook">
+					<?php echo $this->getChildHtml('luxury_footer_facebook') ?>
+				</aside>
+			</div><!-- container /- -->
+		</div><!-- widget section /- -->
+		<!-- Footer bottom -->
+		<div class="footer-bottom">
+			<!-- container --> 
+			<div class="container">
+				<?php echo $this->getChildHtml('luxury_social_footer') ?>
+				<div class="col-md-6 col-sm-6 copy-rights">
+					<p><?php echo $this->getCopyright() ?></p>
+				</div>
+				<?php echo $this->getChildHtml('luxury_footer_payment') ?>
+			</div><!-- container /- -->
+			<a title="Vá para o topo" id="back-to-top" href="#" class="back-to-top"><i class="fa fa-caret-up"></i></a>
+		</div><!-- Footer Bottom -->		
+	</div><!-- Footer Section /- -->

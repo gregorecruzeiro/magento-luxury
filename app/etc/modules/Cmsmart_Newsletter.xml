@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<config>
+      <modules>
+            <Cmsmart_NewsletterPopup>
+                <active>true</active>
+                <codePool>local</codePool>
+            </Cmsmart_NewsletterPopup>
+      </modules>
+</config>

@@ -1,0 +1,80 @@
+<?php include_once 'helper.php'; ?>
+<?php
+$posts = $this->getPosts()->clear()->setPageSize(2)->load();
+?>
+<div id="messages_product_view">
+    <?php Mage::app()->getLayout()->getMessagesBlock()->setMessages(Mage::getSingleton('customer/session')->getMessages(true)); ?>
+    <?php echo Mage::app()->getLayout()->getMessagesBlock()->getGroupedHtml(); ?>
+</div>
+<Section id="blog-section" class="blog-section bottom-shadow">
+	<!-- container -->
+	<div class="container">
+		<!-- Section Header -->
+		<div class="section-header">
+			<h3>Latest From Our Blog</h3>
+		</div><!-- Section Header /- -->
+		
+		<div class="col-md-3 col-sm-4">
+			<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('luxury_home_blog1')->toHtml() ?>
+		</div>
+		
+		<div class="col-md-6 col-sm-4 blog-content">
+			<?php foreach ($posts as $post): ?>
+			<article>
+				<div class="col-md-4 col-sm-4 col-xs-4 ow-left-padding">
+					<a class="post-thumbnail"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'blogpic/'.$post->getFeaturedImage() ?>" alt="featuredImage" width="169" height="220"/></a>
+				</div>
+				<div class="col-md-8 col-sm-8 col-xs-8">
+					<header class="entry-header">
+						<h2 class="entry-title"><a href="<?php echo Mage::getBaseUrl().'blog'; ?>"><?php echo $post->getTitle(); ?></a></h2>
+					</header>
+					<footer class="entry-footer">
+						<span class="posted-on">
+							<span class="sr-only">Posted on </span>
+							<a rel="bookmark" href="#">
+								<?php $time = explode(" ", $post->getCreatedTime()) ?>
+								<span class="entry-date"><?php echo $time[0]; ?></span>
+								<i class="fa fa-calendar"></i>
+							</a>
+						</span>
+						<span class="comments-link">
+							<a href="<?php echo $post->getAddress(); ?>#commentBox"><?php echo $post->getCommentCount(); ?>
+								<i class="fa fa-comments"></i>
+							</a>
+						</span>		
+						<span class="byline">
+							<span class="author vcard">
+								<span class="sr-only">Author </span>
+								<a href="#" class="url fn n"><?php echo $post->getUser(); ?>
+									<i class="fa fa-user"></i>
+								</a>
+							</span>
+						</span>
+					</footer>
+					<div class="entry-content">
+						<?php 
+							$arr = explode(" ",$post->getShortContent());
+							$desc = "";
+							$i = 0;
+							do {
+								$desc .= $arr[$i];
+								$desc .= " ";
+								$i++;
+							} while (strlen($desc) <80);
+							$desc = trim($desc);
+							$desc .= "..."; 
+						?>				
+						<p><?php echo $desc; ?></p>
+					</div>
+					<a href="<?php echo Mage::getBaseUrl().'blog'; ?>" class="read-more">Read More</a>
+				</div>
+			</article>
+			<?php endforeach; ?>
+			
+		</div>
+		
+		<div class="col-md-3 col-sm-4">
+			<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('luxury_home_blog2')->toHtml() ?>
+		</div>
+	</div> <!-- Container /- -->
+</section>
