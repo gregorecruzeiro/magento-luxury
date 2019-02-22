@@ -118,6 +118,12 @@
     </tbody>
 
     <tfoot>
+		<tr>
+		   <td><span>Peso Aproximado do Pedido: </span><?php echo $_item->getOrderItem()->getWeight(); ?>
+        </td>
+		   
+		</tr>
+		
         <tr>
             <td colspan="2" align="right" style="padding:3px 9px"><?php echo Mage::helper('sales')->__('Subtotal') ?></td>
             <td align="right" style="padding:3px 9px"><?php echo $_order->formatPrice($_order->getSubtotal()) ?></td>

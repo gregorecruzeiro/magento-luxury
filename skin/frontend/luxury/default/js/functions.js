@@ -36,8 +36,7 @@
 		{
 			$('.lx-cart-mobile').removeClass("fixed-cart-mobile");
 		};
-
-
+		
 		if ($(this).scrollTop() >= 50)
 		{
 			// If page is scrolled more than 50px

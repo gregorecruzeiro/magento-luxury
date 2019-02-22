@@ -160,6 +160,8 @@ a {
 .logo-block span,
 .logo-search-block input.form-control,
 .logo-search-block form select,
+.busca-mobile input.form-control,
+.busca-mobile form select,
 .cart-link,
 .menu-block .navbar .nav li a,
 .slider-section .slider-box h2,
@@ -476,7 +478,7 @@ a {
 		padding-bottom: 25px;
 		padding-top: 37px;		
 	}
-	
+
 	.logo-block {
 		text-align: center;
 	}
@@ -549,6 +551,45 @@ a {
 		outline: none;
 		
 	}
+	
+
+	.busca-mobile .col-md-3 {
+		border-bottom: 1px solid #f0eeeb;
+	}
+	
+	.busca-mobile input.form-control {
+		box-shadow: none;
+		color: #ad0f11;
+	}
+	
+	.busca-mobile input.form-control,
+	.busca-mobile .btn-default {
+		border: none;
+	}
+	
+	.busca-mobile .btn-default {
+		/* padding-left: 0;*/
+		color: #ad0f11;
+		outline: none;
+		padding: 0px 13px;
+		font-size: 25px;
+	}
+	
+	.busca-mobile .btn-default:hover,
+	.busca-mobile .btn-default:focus {
+		background-color: transparent;		
+	}
+	
+	.busca-mobile form {
+		text-align: right;
+	}
+	.busca-mobile form:focus,
+	.busca-mobile form select.minimal:focus {
+		border: none;
+		box-shadow: none;
+		outline: none;
+		
+	}	
 	
 	.cart-link {
 		/*background-image: url("../images/icon/cart-icon.png");
@@ -3909,6 +3950,7 @@ select:focus {
 }
 
 .logo-search-block form select.minimal,
+.busca-mobile form select.minimal,
 .price-input select.minimal, 
 .product-search-option select.minimal{
 	background-image: none\0;
@@ -4716,8 +4758,8 @@ li.lx-control-checkout:last-child  a{
 }
 .lx-cart-mobile {
 	position: fixed;
-	top: 100px;
-	z-index: 999;
+    top: 17px;
+    z-index: 9999;
 }
 #checkout-review-table tfoot {
 	font-family: 'Playfair Display', serif;
@@ -4726,6 +4768,8 @@ li.lx-control-checkout:last-child  a{
 	font-size: 20px;
     color: #00cc33;
 }
+.slider-section { z-index: 0;}
+.busca-mobile {display: none;}
 .my-account .my-tag-edit .btn-remove {
 	float: right;
 }
@@ -5113,6 +5157,9 @@ body.review-customer-view .my-account .product-img-box .ratings p.rating-links {
 	display: none;
 }
 .logo-search-block .container div.ow-right-padding {
+	padding-top: 10px;
+}
+.busca-mobile .container div.ow-right-padding {
 	padding-top: 10px;
 }
 .minicart-wrapper #cart-sidebar tr td:nth-child(2){

@@ -41,6 +41,9 @@
             <?php echo $this->renderTotals('footer'); ?>
         </tfoot>
         <tbody>
+			<span style="font-family: 'verdana', serif;font-size: 14px;font-weight: bold;">Peso Aproximado </span>
+                         <span style="color:#ad0f11;font-family: 'Roboto', sans-serif;font-size: 18px;float: right"><?php echo $_quote = Mage::getSingleton('checkout/session')->getQuote(); echo $_weight = $_quote->getShippingAddress()->getWeight();?>  gr.</span>
+
             <?php echo $this->renderTotals(); ?>
         </tbody>
     </table>

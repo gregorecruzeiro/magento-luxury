@@ -1158,6 +1158,12 @@
 	.footer-section .informational ul.informational-icons li img {
 		margin-right: 15px;
 	}
+	.lx-cart-mobile a {right: 21%;}
+	.logo-search-block form {display: none;}
+	.busca-mobile {display: flex;}
+	.input-group { width: 317px;}
+	.slider-section { z-index: 9;}
+	
 }
 @media (max-width: 320px) {
 	.price-input #amount2 {

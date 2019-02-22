@@ -31,7 +31,7 @@
             <date><![CDATA[Thu, 11 May 2017 13:42:42 +0000]]></date>
         </install>
         <crypt>
-            <key><![CDATA[acdee9f4223e21b24a729bb3fb31edc3]]></key>
+            <key><![CDATA[bloqued]]></key>
         </crypt>
         <disable_local_modules>false</disable_local_modules>
         <resources>
@@ -41,9 +41,9 @@
             <default_setup>
                 <connection>
                     <host><![CDATA[localhost]]></host>
-                    <username><![CDATA[gfbrutos_loja]]></username>
-                    <password><![CDATA[agn3536##brutos]]></password>
-                    <dbname><![CDATA[gfbrutos_loja]]></dbname>
+                    <username><![CDATA[bloqued]]></username>
+                    <password><![CDATA[bloqued]]></password>
+                    <dbname><![CDATA[bloqued]]></dbname>
                     <initStatements><![CDATA[SET NAMES utf8]]></initStatements>
                     <model><![CDATA[mysql4]]></model>
                     <type><![CDATA[pdo_mysql]]></type>
