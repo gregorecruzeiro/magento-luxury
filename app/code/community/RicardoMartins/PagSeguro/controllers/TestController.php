@@ -34,7 +34,7 @@ class RicardoMartins_PagSeguro_TestController extends Mage_Core_Controller_Front
 
             $keyType = $helper->getLicenseType();
             $info['RicardoMartins_PagSeguroPro']['key_type'] = ($keyType)==''?'assinatura':$keyType;
-            $info['RicardoMartins_PagSeguroPro']['key_validation'] = $this->_validateKey($keyType);
+            $info['RicardoMartins_PagSeguroPro']['key_validation'] = $this->_validateKey();
 
         }
 
@@ -42,6 +42,7 @@ class RicardoMartins_PagSeguro_TestController extends Mage_Core_Controller_Front
 
         $info['token_consistency'] = $this->_getTokenConsistency();
         $info['session_id'] = $helper->getSessionId();
+        $info['retry_active'] = $helper->isRetryActive();
 
         $modules = array_keys((array)Mage::getConfig()->getNode('modules')->children());
         $coreHelper = Mage::helper('core');
@@ -100,9 +101,46 @@ class RicardoMartins_PagSeguro_TestController extends Mage_Core_Controller_Front
         );
     }
 
+    /**
+     * @return string
+     */
     private function _getTokenConsistency()
     {
         $token = Mage::helper('ricardomartins_pagseguro')->getToken();
-        return (strlen($token)!=32)?'Wrong size':'Good';
+        return (strlen($token)!=32 && strlen($token)!=100)?'Wrong size':'Good';
     }
+
+    public function testSenderHashAction()
+    {
+//        $paymentPost = $this->getRequest()->getPost('payment');
+//        $isAdmin = isset($paymentPost['is_admin']) && $paymentPost['is_admin']=="true";
+//        $session = 'checkout/session';
+//        if ($isAdmin) {
+//            $session = 'core/cookie';
+//            Mage::getSingleton($session)->set('PsPayment', serialize($paymentPost));
+//        } else {
+//            Mage::getSingleton($session)->setData('PsPayment', serialize($paymentPost));
+//        }
+//        Mage::log(var_export($paymentPost, true), null, 'martins.log', true);
+//
+//
+//        $this->getResponse()->setHttpResponseCode(200);
+
+
+
+        // pegando sender hash
+        $isAdmin = Mage::app()->getStore()->isAdmin();
+        $session = ($isAdmin)?'core/cookie':'checkout/session';
+        $registry = Mage::getSingleton($session);
+
+        $registry = ($isAdmin)?$registry->get('PsPayment'):$registry->getData('PsPayment');
+
+        $registry = unserialize($registry);
+
+        Mage::log('Registry:' . var_export($registry, true), null, 'martins.log', true);
+
+
+
+    }
+
 }

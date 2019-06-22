@@ -212,10 +212,10 @@ OnestepcheckoutPayment.prototype = {
         });
         OnestepcheckoutCore.updater.startRequest(this.savePaymentUrl, {
             method: 'post',
-            parameters: Form.serialize(this.container.id, true)
+            parameters: Form.serialize(this.container, true)
         });
-    },
-
+    },    
+    
     savePayment: function() {
         var me = this;
         var isValid = true;

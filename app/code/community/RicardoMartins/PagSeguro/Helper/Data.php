@@ -31,6 +31,8 @@ class RicardoMartins_PagSeguro_Helper_Data extends Mage_Core_Helper_Abstract
     const XML_PATH_PAYMENT_PAGSEGUROPRO_BOLETO_ACTIVE   = 'payment/pagseguropro_boleto/active';
     const XML_PATH_PAYMENT_PAGSEGURO_KEY                = 'payment/pagseguropro/key';
     const XML_PATH_PAYMENT_PAGSEGURO_CC_FORCE_INSTALLMENTS = 'payment/rm_pagseguro_cc/force_installments_selection';
+    const XML_PATH_PAYMENT_PAGSEGURO_CC_INSTALLMENT_LIMIT  = 'payment/rm_pagseguro_cc/installment_limit';
+    const XML_PATH_PAYMENT_PAGSEGURO_NOTIFICATION_URL_NOSID= 'payment/rm_pagseguro/notification_url_nosid';
 
     /**
      * Returns session ID from PagSeguro that will be used on JavaScript methods.
@@ -294,6 +296,22 @@ class RicardoMartins_PagSeguro_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Retrieves the JS Include for PagSeguro JS only
+     * @author Ricardo Martins
+     * @return Mage_Core_Block_Text
+     */
+    public function getExternalPagSeguroScriptBlock()
+    {
+        $scriptBlock = Mage::app()->getLayout()->createBlock('core/text', 'pagseguro_direct');
+        $scriptBlock->setText(
+            sprintf(
+                '<script type="text/javascript" src="%s" defer>', Mage::helper('ricardomartins_pagseguro')->getJsUrl()
+            )
+        );
+        return $scriptBlock;
+    }
+
+    /**
      * Return serialized (json) string with module configuration
      * return string
      */
@@ -311,13 +329,65 @@ class RicardoMartins_PagSeguro_Helper_Data extends Mage_Core_Helper_Abstract
             'is_admin' => Mage::app()->getStore()->isAdmin(),
             'show_total' => Mage::getStoreConfigFlag(self::XML_PATH_PAYMENT_PAGSEGURO_CC_SHOW_TOTAL),
             'force_installments_selection' =>
-                Mage::getStoreConfigFlag(self::XML_PATH_PAYMENT_PAGSEGURO_CC_FORCE_INSTALLMENTS)
+                Mage::getStoreConfigFlag(self::XML_PATH_PAYMENT_PAGSEGURO_CC_FORCE_INSTALLMENTS),
+            'installment_limit' => (int)Mage::getStoreConfig(self::XML_PATH_PAYMENT_PAGSEGURO_CC_INSTALLMENT_LIMIT)
         );
         return json_encode($config);
     }
 
+    /**
+     * @return string
+     */
     public function isInfoBrlActive()
     {
         return Mage::getStoreConfigFlag(self::XML_PATH_PAYMENT_PAGSEGURO_CC_INFO_BRL);
+    }
+
+    /**
+     * Check if order retry is available (PRO module >= 3.3) and enabled
+     * @return boolean
+     */
+    public function isRetryActive()
+    {
+        $moduleConfig = Mage::getConfig()->getModuleConfig('RicardoMartins_PagSeguroPro');
+
+        if (version_compare($moduleConfig->version, '3.3', '<')) {
+            return false;
+        }
+
+        $rHelper = Mage::helper('ricardomartins_pagseguropro/retry');
+        if ($rHelper && $rHelper->isRetryEnabled()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if an order could have retry payment process
+     * @param Mage_Sales_Model_Order $order
+     * @return boolean
+     */
+    public function canRetryOrder($order)
+    {
+        if (!$this->isRetryActive()) {
+            return false;
+        }
+
+        $paymentMethod = $order->getPayment()->getMethod();
+        if ($paymentMethod != 'rm_pagseguro_cc') {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if "Dont send SID in the Return URL" option is enabled
+     * @return bool
+     */
+    public function isNoSidUrlEnabled()
+    {
+        return Mage::getStoreConfigFlag(self::XML_PATH_PAYMENT_PAGSEGURO_NOTIFICATION_URL_NOSID);
     }
 }

@@ -2,7 +2,7 @@
  * PagSeguro Transparente para Magento
  * @author Ricardo Martins <ricardo@ricardomartins.net.br>
  * @link https://github.com/r-martins/PagSeguro-Magento-Transparente
- * @version 3.2.3
+ * @version 3.7.4
  */
 
 RMPagSeguro = Class.create({
@@ -21,55 +21,60 @@ RMPagSeguro = Class.create({
         console.log('RMPagSeguro prototype class has been initialized.');
 
         this.config = config;
-        this.config.maxSenderHashAttempts = 30;
+        this.maxSenderHashAttempts = 30;
+
+        /*@deprecated hashSuccess since 3.7.4*/
+        this.hashSuccess = false;
 
         PagSeguroDirectPayment.setSessionId(config.PagSeguroSessionId);
 
 
-        var senderHashSuccess = this.updateSenderHash();
-        if(!senderHashSuccess){
-            console.log('Uma nova tentativa de obter o sender_hash será realizada em 3 segundos.');
-            var intervalSenderHash;
-            var senderHashAttempts = 0;
-            intervalSenderHash = setInterval(function(){
-                senderHashAttempts++;
-                if(PagSeguroDirectPayment.ready){
-                    RMPagSeguroObj.updateSenderHash();
-                    clearInterval(intervalSenderHash);
-                    return true;
-                }
-                if (senderHashAttempts == RMPagSeguroObj.config.maxSenderHashAttempts) {
-                    clearInterval(intervalSenderHash);
-                    console.error('Não foi possível obter o sender_hash após várias tentativas.');
-                }
-            }, 3000 );
+        // this.updateSenderHash();
+        PagSeguroDirectPayment.onSenderHashReady(this.updateSenderHash);
 
-            // document.observe("click", function(e){
-            //     var senderHashSuccess = RMPagSeguroObj.updateSenderHash();
-            //     if(!senderHashSuccess){
-            //         console.log('PagSeguro: segunda tentativa de obter o hash do comprador (sender_hash) falhou. Tente manualmente com RMPagSeguroObj.updateSenderHash().');
-            //         return;
-            //     }
-            //     document.stopObserving('click');
-            // });
-        }
         Validation.add('validate-pagseguro', 'Falha ao atualizar dados do pagaento. Entre novamente com seus dados.',
             function(v, el){
                 RMPagSeguroObj.updatePaymentHashes();
                 return true;
-        })
+        });
     },
 
-    updateSenderHash: function() {
-        var senderHash = PagSeguroDirectPayment.getSenderHash();
-        if(typeof senderHash != "undefined" && senderHash != '')
-        {
-            this.senderHash = senderHash;
-            this.updatePaymentHashes();
+    /** @deprecated since 3.7.4 - agora usamos o onSenderHashReady ao invés de getSenderHash que dispensa checar disponibilidade*/
+    retryUpdateSender: function() {
+        if (this.hashSuccess){
             return true;
         }
-        console.log('PagSeguro: Falha ao obter o senderHash.');
-        return false;
+        console.log('Uma nova tentativa de obter o sender_hash será realizada em 3 segundos.');
+
+        var senderHashAttempts = 0;
+        this.intervalSenderHash = setInterval(function(){
+            senderHashAttempts++;
+            // console.log("Tentativa " + senderHashAttempts);
+            if(PagSeguroDirectPayment.ready){
+                RMPagSeguroObj.updateSenderHash();
+                clearInterval(RMPagSeguroObj.intervalSenderHash);
+                return true;
+            }
+            if (senderHashAttempts == RMPagSeguroObj.maxSenderHashAttempts) {
+                clearInterval(RMPagSeguroObj.intervalSenderHash);
+                console.error('Não foi possível obter o sender_hash após várias tentativas.');
+            }
+        }, 3000 );
+    },
+    updateSenderHash: function(response) {
+        if(typeof(response) === "undefined"){
+            PagSeguroDirectPayment.onSenderHashReady(this.updateSenderHash);
+        }
+        if(response.status == 'error'){
+            console.log('PagSeguro: Falha ao obter o senderHash. ' + response.message);
+            return false;
+        }
+        RMPagSeguroObj.senderHash = response.senderHash;
+        RMPagSeguroObj.updatePaymentHashes();
+
+        /*@deprecated hashSuccess since 3.7.4*/
+        RMPagSeguroObj.hashSuccess = true;
+        return true;
     },
 
     getInstallments: function(grandTotal, selectedInstallment){
@@ -104,6 +109,7 @@ RMPagSeguro = Class.create({
                     parcelsDrop.add(option);
                 }
 
+                var installment_limit = RMPagSeguroObj.config.installment_limit;
                 for(var x=0; x < b.length; x++){
                     var option = document.createElement('option');
                     option.text = b[x].quantity + "x de R$" + b[x].installmentAmount.toFixed(2).toString().replace('.',',');
@@ -113,6 +119,9 @@ RMPagSeguro = Class.create({
                     }
                     option.selected = (b[x].quantity == selectedInstallment);
                     option.value = b[x].quantity + "|" + b[x].installmentAmount;
+                    if (installment_limit != 0 && installment_limit <= x) {
+                        break;
+                    }
                     parcelsDrop.add(option);
                 }
 //                       console.log(b[0].quantity);
@@ -137,10 +146,10 @@ RMPagSeguro = Class.create({
             var ccExpYrElm = $$('select[name="payment[ps_cc_exp_year]"]').first();
             var ccCvvElm = $$('input[name="payment[ps_cc_cid]"]').first();
 
-            Element.observe(ccNumElm,'keyup',function(e){obj.updateCreditCardToken();});
-            Element.observe(ccExpMoElm,'keyup',function(e){obj.updateCreditCardToken();});
-            Element.observe(ccExpYrElm,'keyup',function(e){obj.updateCreditCardToken();});
-            Element.observe(ccCvvElm,'keyup',function(e){obj.updateCreditCardToken();});
+            Element.observe(ccNumElm,'change',function(e){obj.updateCreditCardToken();});
+            Element.observe(ccExpMoElm,'change',function(e){obj.updateCreditCardToken();});
+            Element.observe(ccExpYrElm,'change',function(e){obj.updateCreditCardToken();});
+            Element.observe(ccCvvElm,'change',function(e){obj.updateCreditCardToken();});
         }catch(e){
             console.error('Não foi possível adicionar observevação aos cartões. ' + e.message);
         }

@@ -11,6 +11,12 @@
  */
 class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
 {
+    // If discount amount is greater than items
+    protected $_extraDiscountGreaterThanItems = false;
+
+    protected $_extraDiscount = 0;
+
+
 
     /**
      * Return items information, to be send to API
@@ -29,7 +35,7 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
                 $return['itemId'.$x] = $items[$y]->getId();
                 $return['itemDescription'.$x] = substr($items[$y]->getName(), 0, 100);
                 $return['itemAmount'.$x] = number_format($itemPrice, 2, '.', '');
-                $return['itemQuantity'.$x] = $qtyOrdered;
+                $return['itemQuantity'.$x] = (int)$qtyOrdered;
 
                 //We can't send 0.00 as value to PagSeguro. Will be discounted on extraAmount.
                 if ($itemPrice == 0) {
@@ -52,7 +58,7 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
         $digits = new Zend_Filter_Digits();
         $cpf = $this->_getCustomerCpfValue($order, $payment);
 
-        $phone = $this->_extractPhone($order->getBillingAddress()->getTelephone());
+        $phone = $this->_extractPhone($order->getBillingAddress()->getData($this->_getTelephoneAttribute()));
 
         $senderName = $this->removeDuplicatedSpaces(
             sprintf('%s %s', $order->getCustomerFirstname(), $order->getCustomerLastname())
@@ -60,9 +66,11 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
 
         $senderName = substr($senderName, 0, 50);
 
+        $emailPrefix = $this->_dispatchHashEmail($order) ? 'hash' : 'customer';
+
         $return = array(
             'senderName'    => $senderName,
-            'senderEmail'   => trim($order->getCustomerEmail()),
+            'senderEmail'   => trim($order->getData($emailPrefix . '_email')),
             'senderHash'    => $this->getPaymentHash('sender_hash'),
             'senderCPF'     => $digits->filter($cpf),
             'senderAreaCode'=> $phone['area'],
@@ -90,7 +98,7 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
 
         //data
         $creditCardHolderBirthDate = $this->_getCustomerCcDobValue($order->getCustomer(), $payment);
-        $phone = $this->_extractPhone($order->getBillingAddress()->getTelephone());
+        $phone = $this->_extractPhone($order->getBillingAddress()->getData($this->_getTelephoneAttribute()));
 
 
         $holderName = $this->removeDuplicatedSpaces($payment['additional_information']['credit_card_owner']);
@@ -181,6 +189,21 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
                 if ($this->_shouldSplit($order)) {
                     $shippingCost -= 0.01;
                 }
+
+                //If total discount is greater than items, we try to discount from shipping
+                if ($this->_extraDiscountGreaterThanItems && abs($this->_extraDiscount) >= $shippingCost) {
+                    $shippingDiscount = (abs($this->_extraDiscount) <= $shippingCost)?
+                        abs($this->_extraDiscount):
+                        min(abs($this->_extraDiscount),$shippingCost);
+
+                    //if extra discount greater, we change extraAmount to get only the difference
+                    if (abs($this->_extraDiscount) >= $shippingCost) {
+                        $return['extraAmount'] = $this->_extraDiscount + $shippingCost;
+                    }
+
+                    $shippingCost -= $shippingDiscount;
+                }
+
                 $return['shippingCost'] = number_format($shippingCost, 2, '.', '');
             }
         }
@@ -201,7 +224,7 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
         }
         else if(strlen($state) > 2 && is_string($state))
         {
-            $state = $this->normalizeChars($state);
+            $state = self::normalizeChars($state);
             $state = trim($state);
             $state = $this->stripAccents($state);
             $state = mb_convert_case($state, MB_CASE_UPPER);
@@ -291,11 +314,21 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
 
         //Discounting gift products
         $orderItems = $order->getAllVisibleItems();
+        $itemsTotal = 0;
         foreach ($orderItems as $item) {
-            if ($item->getPrice() == 0) {
+            $itemPrice = $item->getPrice();
+            if ($itemPrice == 0) {
                 $extra -= 0.01 * $item->getQtyOrdered();
             }
+            $itemsTotal += $itemPrice;
         }
+
+        if ($extra < 0 && abs($extra) >= $itemsTotal) {
+            $this->_extraDiscountGreaterThanItems = true;
+        }
+
+        $this->_extraDiscount = $extra;
+
         return number_format($extra, 2, '.', '');
     }
 
@@ -306,7 +339,7 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
      */
     public function removeDuplicatedSpaces($string)
     {
-        $string = $this->normalizeChars($string);
+        $string = self::normalizeChars($string);
 
         return preg_replace('/\s+/', ' ', trim($string));
     }
@@ -400,7 +433,7 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Returns customer's date of birthday, based on your module configuration
+     * Returns customer's date of birthday, based on your module configuration or return a default date
      * @param Mage_Customer_Model_Customer $customer
      * @param                              $payment
      *
@@ -416,7 +449,18 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
             }
         }
 
-        $dob = $customer->getResource()->getAttribute($ccDobAttribute)->getFrontend()->getValue($customer);
+        //try to get from payment info
+        $dob = $payment->getOrder()->getData('customer_' . $ccDobAttribute);
+        if (!empty($dob)) {
+            return date('d/m/Y', strtotime($dob));
+        }
+
+        //try to get from customer
+        $attribute = $customer->getResource()->getAttribute($ccDobAttribute);
+        if (!$attribute) {
+            return '01/01/1970';
+        }
+        $dob = $attribute->getFrontend()->getValue($customer);
 
 
         return date('d/m/Y', strtotime($dob));
@@ -438,22 +482,28 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
                 return $payment['additional_information'][$payment->getMethod() . '_cpf'];
             }
         }
-        $entity = explode('|', $customerCpfAttribute);
+        $cpfAttributeCnf = explode('|', $customerCpfAttribute);
+        $entity = reset($cpfAttributeCnf);
+        $attrName = end($cpfAttributeCnf);
         $cpf = '';
-        if (count($entity) == 1 || $entity[0] == 'customer') {
-            if (count($entity) == 2) {
-                $customerCpfAttribute = $entity[1];
+        if ($entity && $attrName) {
+            if (!$order->getCustomerIsGuest()) {
+                $address = ($entity == 'customer') ? $order->getShippingAddress() : $order->getBillingAddress();
+                $cpf = $address->getData($attrName);
+
+                //if fail,try to get cpf from customer entity
+                if (!$cpf) {
+                    $customer = $order->getCustomer();
+                    $cpf = $customer->getData($attrName);
+                }
             }
-            $customer = $order->getCustomer();
 
-            $cpf = $customer->getData($customerCpfAttribute);
-        } else if (count($entity) == 2 && $entity[0] == 'billing' ) { //billing
-            $cpf = $order->getShippingAddress()->getData($entity[1]);
+            //for guest orders...
+            if (!$cpf && $order->getCustomerIsGuest()) {
+                $cpf = $order->getData($entity . '_' . $attrName);
+            }
         }
 
-        if ($order->getCustomerIsGuest() && empty($cpf)) {
-            $cpf = $order->getData('customer_' . $customerCpfAttribute);
-        }
 
         $cpfObj = new Varien_Object(array('cpf'=>$cpf));
 
@@ -494,6 +544,27 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
         return (abs($extraAmount) == $totalAmount);
     }
 
+    private function _dispatchHashEmail (&$order)
+    {
+        if (Mage::getStoreConfigFlag('payment/rm_pagseguro/hash_email_active'))
+        {
+            $algo   = Mage::getStoreConfig('payment/rm_pagseguro/hash_email_algo');
+            $domain = Mage::getStoreConfig('payment/rm_pagseguro/hash_email_domain');
+
+            $order->setHashEmail(hash($algo, $order->getCustomerEmail()) . '@' . $domain);
+
+            Mage::dispatchEvent ('ricardomartins_pagseguro_hash_email_before', array(
+                'customer_email' => $order->getCustomerEmail(), 'hash_email' => $order->getHashEmail()
+            ));
+
+            return true;
+        }
+    }
+
+    protected function _getTelephoneAttribute()
+    {
+        return Mage::getStoreConfig('payment/rm_pagseguro/address_telephone_attribute');
+    }
     /**
      * Get payment hashes (sender_hash & credit_card_token) from session
      * @param string $param sender_hash or credit_card_token
@@ -518,6 +589,84 @@ class RicardoMartins_PagSeguro_Helper_Params extends Mage_Core_Helper_Abstract
             return $registry[$param];
         }
 
+        return false;
+    }
+
+    /**
+     * Gets firstname and lastname of the full given name
+     * @param $fullName
+     *
+     * @return array with 2 elements (firstname and lastname)
+     */
+    public function splitName($fullName)
+    {
+        $fullName = $this->removeDuplicatedSpaces($fullName);
+        $exploded = explode(' ', $fullName);
+        return array(
+          0 => $exploded[0],
+          1 => end($exploded)
+        );
+
+    }
+
+    /**
+     * Get the default name of given Brazilian UF
+     * @param $uf
+     *
+     * @return string or false
+     */
+    public function convertUFRegion($uf)
+    {
+        $uf = strtoupper($uf);
+        $directory = Mage::getModel('directory/country')->loadByCode('BR');
+        if ($directory && $directory->getRegionCollection()) {
+            return $directory->getRegionCollection()->addFieldToFilter('code', $uf)->getFirstItem()->getDefaultName();
+        }
+
+        $brUFRegions = array(
+            'AC'=>'Acre',
+            'AL'=>'Alagoas',
+            'AP'=>'Amapá',
+            'AM'=>'Amazonas',
+            'BA'=>'Bahia',
+            'CE'=>'Ceará',
+            'DF'=>'Distrito Federal',
+            'ES'=>'Espírito Santo',
+            'GO'=>'Goiás',
+            'MA'=>'Maranhão',
+            'MT'=>'Mato Grosso',
+            'MS'=>'Mato Grosso do Sul',
+            'MG'=>'Minas Gerais',
+            'PA'=>'Pará',
+            'PB'=>'Paraíba',
+            'PR'=>'Paraná',
+            'PE'=>'Pernambuco',
+            'PI'=>'Piauí',
+            'RJ'=>'Rio de Janeiro',
+            'RN'=>'Rio Grande do Norte',
+            'RS'=>'Rio Grande do Sul',
+            'RO'=>'Rondônia',
+            'RR'=>'Roraima',
+            'SC'=>'Santa Catarina',
+            'SP'=>'São Paulo',
+            'SE'=>'Sergipe',
+            'TO'=>'Tocantins'
+        );
+        return (isset($brUFRegions[$uf]))?$brUFRegions[$uf]:false;
+    }
+
+    /**
+     * @param $uf
+     *
+     * @return int|false
+     */
+    public function getRegionIdFromUF($uf)
+    {
+        $uf = strtoupper($uf);
+        $directory = Mage::getModel('directory/country')->loadByCode('BR');
+        if ($directory && $directory->getRegionCollection()) {
+            return $directory->getRegionCollection()->addFieldToFilter('code', $uf)->getFirstItem()->getRegionId();
+        }
         return false;
     }
 }

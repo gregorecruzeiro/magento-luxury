@@ -24,7 +24,6 @@ class RicardoMartins_PagSeguro_Model_Payment_Cc extends RicardoMartins_PagSeguro
     protected $_canUseCheckout = true;
     protected $_canUseForMultishipping = true;
     protected $_canSaveCc = false;
-
     /**
      * Check if module is available for current quote and customer group (if restriction is activated)
      * @param Mage_Sales_Model_Quote $quote
@@ -40,17 +39,13 @@ class RicardoMartins_PagSeguro_Model_Payment_Cc extends RicardoMartins_PagSeguro
         if (Mage::getStoreConfigFlag("payment/pagseguro_cc/group_restriction") == false) {
             return $isAvailable;
         }
-
         $currentGroupId = $quote->getCustomerGroupId();
         $customerGroups = explode(',', $this->_getStoreConfig('customer_groups'));
-
         if ($isAvailable && in_array($currentGroupId, $customerGroups)) {
             return true;
         }
-
         return false;
     }
-
     /**
      * Assign data to info model instance
      *
@@ -62,23 +57,18 @@ class RicardoMartins_PagSeguro_Model_Payment_Cc extends RicardoMartins_PagSeguro
         if (!($data instanceof Varien_Object)) {
             $data = new Varien_Object($data);
         }
-
         $info = $this->getInfoInstance();
-
         /** @var RicardoMartins_PagSeguro_Helper_Params $pHelper */
         $pHelper = Mage::helper('ricardomartins_pagseguro/params');
-
         $info->setAdditionalInformation('sender_hash', $pHelper->getPaymentHash('sender_hash'))
             ->setAdditionalInformation('credit_card_token', $pHelper->getPaymentHash('credit_card_token'))
             ->setAdditionalInformation('credit_card_owner', $data->getPsCcOwner())
             ->setCcType($pHelper->getPaymentHash('cc_type'))
             ->setCcLast4(substr($data->getPsCcNumber(), -4));
-
         //cpf
         if (Mage::helper('ricardomartins_pagseguro')->isCpfVisible()) {
             $info->setAdditionalInformation($this->getCode() . '_cpf', $data->getData($this->getCode() . '_cpf'));
         }
-
         //DOB
         $ownerDobAttribute = Mage::getStoreConfig('payment/rm_pagseguro_cc/owner_dob_attribute');
         if (empty($ownerDobAttribute)) {
@@ -95,7 +85,6 @@ class RicardoMartins_PagSeguro_Model_Payment_Cc extends RicardoMartins_PagSeguro
                 )
             );
         }
-
         //Installments
         if ($data->getPsCcInstallments()) {
             $installments = explode('|', $data->getPsCcInstallments());
@@ -104,10 +93,8 @@ class RicardoMartins_PagSeguro_Model_Payment_Cc extends RicardoMartins_PagSeguro
                 $info->setAdditionalInformation('installment_value', $installments[1]);
             }
         }
-
         return $this;
     }
-
     /**
      * Validate payment method information object
      *
@@ -117,20 +104,15 @@ class RicardoMartins_PagSeguro_Model_Payment_Cc extends RicardoMartins_PagSeguro
     {
         parent::validate();
         $missingInfo = $this->getInfoInstance();
-
         /** @var RicardoMartins_PagSeguro_Helper_Params $pHelper */
         $pHelper = Mage::helper('ricardomartins_pagseguro/params');
-
         $shippingMethod = Mage::getSingleton('checkout/session')->getQuote()->getShippingAddress()->getShippingMethod();
-
         // verifica se não há método de envio selecionado antes de exibir o erro de falha no cartão de crédito - Weber
         if (empty($shippingMethod)) {
             return false;
         }
-
         $senderHash = $pHelper->getPaymentHash('sender_hash');
         $creditCardToken = $pHelper->getPaymentHash('credit_card_token');
-
         if (!$creditCardToken || !$senderHash) {
             $missingInfo = sprintf('Token do cartão: %s', var_export($creditCardToken, true));
             $missingInfo .= sprintf('/ Sender_hash: %s', var_export($senderHash, true));
@@ -147,11 +129,8 @@ class RicardoMartins_PagSeguro_Model_Payment_Cc extends RicardoMartins_PagSeguro
         }
         return $this;
     }
-
-
     // public function processBeforeRefund($invoice, $payment){} //before refund
     // public function processCreditmemo($creditmemo, $payment){} //after refund
-
     /**
      * Order payment
      *
@@ -163,15 +142,12 @@ class RicardoMartins_PagSeguro_Model_Payment_Cc extends RicardoMartins_PagSeguro
     public function order(Varien_Object $payment, $amount)
     {
         $order = $payment->getOrder();
-
         //will grab data to be send via POST to API inside $params
         $params = Mage::helper('ricardomartins_pagseguro/internal')->getCreditCardApiCallParams($order, $payment);
         $rmHelper = Mage::helper('ricardomartins_pagseguro');
-
         //call API
         $returnXml = $this->callApi($params, $payment);
         $this->proccessNotificatonResult($returnXml);
-
         if (isset($returnXml->errors)) {
             $errMsg = array();
             foreach ($returnXml->errors as $error) {
@@ -184,11 +160,8 @@ class RicardoMartins_PagSeguro_Model_Payment_Cc extends RicardoMartins_PagSeguro
             $errMsg[] = $rmHelper->__((string)$error->message) . ' (' . $error->code . ')';
             Mage::throwException('Um erro ocorreu em seu pagamento.' . PHP_EOL . implode(PHP_EOL, $errMsg));
         }
-
         $payment->setSkipOrderProcessing(true);
-
         if (isset($returnXml->code)) {
-
             $additional = array('transaction_id'=>(string)$returnXml->code);
             if ($existing = $payment->getAdditionalInformation()) {
                 if (is_array($existing)) {
@@ -196,11 +169,9 @@ class RicardoMartins_PagSeguro_Model_Payment_Cc extends RicardoMartins_PagSeguro
                 }
             }
             $payment->setAdditionalInformation($additional);
-
         }
         return $this;
     }
-
     /**
      * Generically get module's config field value
      * @param $field
@@ -211,5 +182,4 @@ class RicardoMartins_PagSeguro_Model_Payment_Cc extends RicardoMartins_PagSeguro
     {
         return Mage::getStoreConfig("payment/pagseguro_cc/{$field}");
     }
-
 }

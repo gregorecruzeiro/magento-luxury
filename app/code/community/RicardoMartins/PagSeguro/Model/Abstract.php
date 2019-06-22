@@ -12,10 +12,19 @@
 class RicardoMartins_PagSeguro_Model_Abstract extends Mage_Payment_Model_Method_Abstract
 {
 
+    /** @var Mage_Sales_Model_Order $_order */
+    protected $_order;
+
     /**
      * Processes notification XML data. XML is sent right after order is sent to PagSeguro, and on order updates.
+     *
      * @see https://pagseguro.uol.com.br/v2/guia-de-integracao/api-de-notificacoes.html#v2-item-servico-de-notificacoes
+     *
      * @param SimpleXMLElement $resultXML
+     *
+     * @return $this
+     * @throws Mage_Core_Exception
+     * @throws Varien_Exception
      */
     public function proccessNotificatonResult(SimpleXMLElement $resultXML)
     {
@@ -27,19 +36,40 @@ class RicardoMartins_PagSeguro_Model_Abstract extends Mage_Payment_Model_Method_
         }
         Mage::register('sales_order_invoice_save_after_event_triggered', true);
 
-        if (isset($resultXML->error)) {
-            $errMsg = Mage::helper('ricardomartins_pagseguro')->__((string)$resultXML->error->message);
-            Mage::throwException(
-                $this->_getHelper()->__(
-                    'Problemas ao processar seu pagamento. %s(%s)',
-                    $errMsg,
-                    (string)$resultXML->error->code
-                )
-            );
+        if (isset($resultXML->errors)) {
+            foreach ($resultXML->errors as $error) {
+                $errMsg[] = $this->_getHelper()->__((string)$error->message) . ' (' . $error->code . ')';
+            }
+            Mage::throwException('Um ou mais erros ocorreram no seu pagamento.' . PHP_EOL . implode(PHP_EOL, $errMsg));
         }
+
+        if (isset($resultXML->error)) {
+            $error = $resultXML->error;
+            $errMsg[] = $this->_getHelper()->__((string)$error->message) . ' (' . $error->code . ')';
+
+            if(count($resultXML->error) > 1){
+                unset($errMsg);
+                foreach ($resultXML->error as $error) {
+                    $errMsg[] = $this->_getHelper()->__((string)$error->message) . ' (' . $error->code . ')';
+                }
+            }
+
+            Mage::throwException('Um erro ocorreu em seu pagamento.' . PHP_EOL . implode(PHP_EOL, $errMsg));
+        }
+
         if (isset($resultXML->reference)) {
             /** @var Mage_Sales_Model_Order $order */
             $orderNo = (string)$resultXML->reference;
+            if (strstr($orderNo, 'kiosk_') !== false) {
+                $kioskNotification = new Varien_Object();
+                $kioskNotification->setOrderNo($orderNo);
+                $kioskNotification->setNotificationXml($resultXML);
+                Mage::dispatchEvent(
+                    'ricardomartins_pagseguro_kioskorder_notification_received',
+                    array('kiosk_notification' => $kioskNotification)
+                );
+                $orderNo = $kioskNotification->getOrderNo();
+            }
             $order = Mage::getModel('sales/order')->loadByIncrementId($orderNo);
             if (!$order->getId()) {
                 $helper->writeLog(
@@ -47,6 +77,7 @@ class RicardoMartins_PagSeguro_Model_Abstract extends Mage_Payment_Model_Method_
                 );
                 return $this;
             }
+            $this->_order = $order;
             $payment = $order->getPayment();
 
             $this->_code = $payment->getMethod();
@@ -81,7 +112,20 @@ class RicardoMartins_PagSeguro_Model_Abstract extends Mage_Payment_Model_Method_
                         $message .= ' A transação foi negada ou cancelada pela instituição bancária.';
                         break;
                 }
-                $order->cancel();
+
+                $orderCancellation = new Varien_Object();
+                $orderCancellation->setData(array(
+                   'should_cancel' => true,
+                   'cancellation_source' => (string)$resultXML->cancellationSource,
+                   'order'        => $order,
+                ));
+                Mage::dispatchEvent('ricardomartins_pagseguro_before_cancel_order', array(
+                    'order_cancellation' => $orderCancellation
+                ));
+
+                if ($orderCancellation->getShouldCancel()) {
+                    $order->cancel();
+                }
             }
 
             if ($processedState->getStateChanged()) {
@@ -160,6 +204,8 @@ class RicardoMartins_PagSeguro_Model_Abstract extends Mage_Payment_Model_Method_
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
+        $return = '';
+
         try {
             $return = curl_exec($ch);
         } catch (Exception $e) {
@@ -186,8 +232,10 @@ class RicardoMartins_PagSeguro_Model_Abstract extends Mage_Payment_Model_Method_
     /**
      * Processes order status and return information about order status and state
      * Doesn' change anything to the order. Just returns an object showing what to do.
+     *
      * @param $statusCode
      * @return Varien_Object
+     * @throws Varien_Exception
      */
     public function processStatus($statusCode)
     {
@@ -254,6 +302,11 @@ class RicardoMartins_PagSeguro_Model_Abstract extends Mage_Payment_Model_Method_
                 $return->setState(Mage_Sales_Model_Order::STATE_CANCELED);
                 $return->setIsCustomerNotified(true);
                 $return->setMessage('Cancelada: a transação foi cancelada sem ter sido finalizada.');
+                if ($this->_order && Mage::helper('ricardomartins_pagseguro')->canRetryOrder($this->_order)) {
+                    $return->setState(Mage_Sales_Model_Order::STATE_HOLDED);
+                    $return->setIsCustomerNotified(false);
+                    $return->setMessage('Retentativa: a transação ia ser cancelada (status 7), mas a opção de retentativa estava ativada. O pedido será cancelado posteriormente caso o cliente não use o link de retentativa no prazo estabelecido.');
+                }
                 break;
             default:
                 $return->setIsCustomerNotified(false);
@@ -303,6 +356,8 @@ class RicardoMartins_PagSeguro_Model_Abstract extends Mage_Payment_Model_Method_
         curl_setopt($ch, CURLOPT_TIMEOUT, 45);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+        $response = '';
 
         try{
             $response = curl_exec($ch);
@@ -424,7 +479,16 @@ class RicardoMartins_PagSeguro_Model_Abstract extends Mage_Payment_Model_Method_
         }
         return rtrim($fieldsString, '&');
     }
+
+    /**
+     * Retrieve model helper
+     *
+     * @return RicardoMartins_PagSeguro_Helper_Data
+     */
+    protected function _getHelper()
+    {
+        return Mage::helper('ricardomartins_pagseguro');
+    }
 }
 
 
-    

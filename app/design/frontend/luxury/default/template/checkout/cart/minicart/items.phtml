@@ -58,7 +58,7 @@ if(empty($_cartQty)) {
 		<?php if($_cartQty && $this->isPossibleOnepageCheckout()): ?>
 		<div class="cart-button">
 			<a title="Carrinho" href="<?php echo $this->getUrl('checkout/cart'); ?>">Carrinho</a>
-			<a title="Finalizar" href="<?php echo $this->getUrl('checkout/onepage'); ?>">Finalizar</a>
+			<a title="Finalizar" href="<?php echo $this->getUrl('finalizar'); ?>">Finalizar</a>
 		</div>
 		<?php endif; ?>		
         <script type="text/javascript">

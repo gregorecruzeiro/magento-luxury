@@ -41,7 +41,7 @@
 -------------------------------------------------------------------*/
 body,
 .page-header > h3 > span {
-	font-family: 'Roboto', sans-serif;
+	font-family: 'Roboto', sans-serif !important;
 	/*font-family: 'Roboto', sans-serif;*/
 }
 
@@ -802,7 +802,7 @@ a {
 	line-height: 20px;
 	padding: 0 10px;
 	color: #fff;
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto', sans-serif;
 }
 
 .slider-section .slider-box button,
@@ -2729,7 +2729,7 @@ input.qtyplus, input.qtyminus {
 .total-amount{
 	font-size: 20px;
 	color: #b3aa9b;
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto', sans-serif;
 }
 
 .form-group input:focus,
@@ -2964,7 +2964,7 @@ input.qtyplus, input.qtyminus {
 
 .single-product-sidebar .widget_recent_post .shopping-cart-table table tr th {
 	padding: 20px 0;
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto', sans-serif;
 }
 
 .single-product-sidebar .widget_recent_post .shopping-cart-table table tr td {
@@ -3726,7 +3726,7 @@ select:focus {
 	bottom: 36px;
 	left: 0;
 	right: 0;
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto', sans-serif;
 	color: #ad0f11;
 	font-size: 16px;
 }
@@ -4312,7 +4312,7 @@ a.lx-product-name {
     padding: 12px 20px;
 	color: #fff;
 	/*text-transform: uppercase;*/
-	/*font-family: 'Playfair Display', serif;*/
+	/*font-family: 'Roboto', sans-serif;*/
 	border: none;
 }
 .widget_recent_post .shopping-cart-table .add-to-cart .add-to-cart-buttons{
@@ -4386,7 +4386,7 @@ p.lx.block-subtitle {
 	color: #000;
     font-size: 17px;
     font-weight: normal;
-	/*font-family: 'Playfair Display', serif;*/
+	/*font-family: 'Roboto', sans-serif;*/
 }
 #reviews #product-review-table tr:last-child,
 .collateral-tabs #product-attribute-specs-table tr:last-child {
@@ -4408,7 +4408,7 @@ p.lx.block-subtitle {
     border-radius: 0;
 	color:#fff;
 	font-size: 14px
-	/*font-family: 'Playfair Display', serif;*/
+	/*font-family: 'Roboto', sans-serif;*/
 }
 #review-form .buttons-set .btn:hover,
 #addTagForm button:hover,
@@ -4422,7 +4422,7 @@ p.lx.block-subtitle {
 	display: inline-block;
 }
 .box-tags .form-add label {
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto', sans-serif;
 }
 .box-tags .form-add input {
 	border: 2px solid #d6cfc8;
@@ -4545,7 +4545,7 @@ h3.product-name {
 	text-align: left;
     padding: 18px 17px;
     font-weight: normal;
-	/*font-family: 'Playfair Display', serif;*/
+	/*font-family: 'Roboto', sans-serif;*/
 }
 .shopping-cart-table #shopping-cart-table  input.input-text.qty,
 #multiship-addresses-table input.qty  {
@@ -4625,7 +4625,7 @@ h3.product-name {
     border-radius: 0;
 	color: #fff;
 	font-size: 14px
-	/*font-family: 'Playfair Display', serif;*/
+	/*font-family: 'Roboto', sans-serif;*/
 }
 #discount-coupon-form  .discount-form button:nth-of-type(2) {
 	margin-top: 20px;
@@ -4666,7 +4666,7 @@ ol, ul {
 	margin-left: -40px;
 }
 .lx-font-custom {
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto', sans-serif;
 }
 .opc .section.allow:not(.active) .step-title a {
     display: block;
@@ -4762,7 +4762,7 @@ li.lx-control-checkout:last-child  a{
     z-index: 9999;
 }
 #checkout-review-table tfoot {
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto', sans-serif;
 }
 #checkout-review-table tfoot tr.last td.last {
 	font-size: 20px;
@@ -4830,7 +4830,7 @@ ul.add-to-links {
 }
 #onepage-checkout-shipping-method-additional-load h4 {
 	font-size: 16px;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Roboto', sans-serif;
 }
 #allow-gift-messages-for-order-container ul.form-list,
 #allow-gift-messages-for-items-container ol,
@@ -4844,7 +4844,7 @@ ul.add-to-links {
 }
 #allow-gift-messages-for-items-container h5.product-name,
 .gift-messages-form  h5.product-name{
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto', sans-serif;
     font-weight: bold;
 }
 #allow-gift-messages-for-items-container label ,
@@ -4861,7 +4861,7 @@ ul.add-to-links {
 #checkout_multishipping_form h4,
 #shipping_method_form  h3.product-name{
 	font-size: 16px;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: bold;
 }
 #multiship-addresses-table h3.product-name a {
@@ -4917,7 +4917,7 @@ body.checkout-multishipping-shipping .multiple-checkout h4,
 .checkout-multishipping-address-newshipping .lx-div-fix label,
 .box-sp-methods dl.sp-methods,
 #checkout-shipping-method-load dl.sp-methods{
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto', sans-serif;
 }
 .lx-multi-margin {
 	margin-bottom: 30px;
@@ -4933,7 +4933,7 @@ body.checkout-multishipping-shipping .multiple-checkout h4,
 .place-order .grand-total big {
 	font-weight: bold;
 	display: block;
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto', sans-serif;
 	margin-bottom: 20px;
 }
 .place-order .grand-total big span {
@@ -5240,7 +5240,7 @@ body.customer-account-index .my-account  ol#my_recent_tags li .details .tags ul 
 }
 body.tag-customer-view  .my-account #my-tags-table .price-box p span,
 body.tag-customer-view  .my-account #my-tags-table .price-box  span{
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto', sans-serif;
 }
 body.tag-customer-view  .my-account #my-tags-table .price-box p.special-price,
 body.tag-customer-view  .my-account #my-tags-table .price-box > span {
@@ -5291,7 +5291,7 @@ a.btn-cart:hover {
     text-transform: uppercase;
     color: #b3aa9b;
     text-shadow: none;
-	font-family: 'Playfair Display', serif;
+	font-family: 'Roboto', sans-serif;
 }
 .lx-h2-fix {
 	background-image: url("../images/section-header-bg.png");
@@ -5326,7 +5326,7 @@ a.btn-cart:hover {
     padding: 17px 0;
 	font-weight: normal;
     text-transform: uppercase;	
-	/*font-family: 'Playfair Display', serif;*/
+	/*font-family: 'Roboto', sans-serif;*/
 }
 .lx-addtocart-custom .add-to-cart-buttons button {
 	z-index: 3;

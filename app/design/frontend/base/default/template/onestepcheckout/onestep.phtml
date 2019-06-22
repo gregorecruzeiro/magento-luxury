@@ -164,3 +164,39 @@
 <script type="text/javascript">
 if(!BASE_URL) var BASE_URL = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>";
 </script>
+
+
+
+<script type="text/javascript">
+$j(function($) {
+      $j('input[name*="payment[method]"]').live('click', function() {
+              checkout.update({
+                    'review': 1,
+                    //,'shipping-method': 1
+                    'payment-method': 1
+              });
+
+             setTimeout(function(){
+                        checkout.update({
+                            'review': 1
+                            //'payment-method': 1
+                        });
+             }, 5000);
+      });
+
+      $j('input[name*="shipping_method"]').live('click', function() {
+              checkout.update({
+                    'review': 1
+                    ,'payment-method': 1
+                    //'shipping-method': 1
+              });
+             setTimeout(function(){
+                        checkout.update({
+                            'review': 1,
+                            //'payment-method': 1
+                        });
+             }, 500);
+        });
+	});
+
+</script>

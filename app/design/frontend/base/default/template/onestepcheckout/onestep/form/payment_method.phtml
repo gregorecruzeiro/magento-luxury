@@ -44,6 +44,7 @@
             <div class="btn-close"><a href="#" id="payment-tool-tip-close" title="<?php echo $this->__('Close') ?>"><?php echo $this->__('Close') ?></a></div>
             <div class="tool-tip-content"><img src="<?php echo $this->getSkinUrl('images/cvv.gif') ?>" alt="<?php echo $this->__('Card Verification Number Visual Reference') ?>" title="<?php echo $this->__('Card Verification Number Visual Reference') ?>" /></div>
         </div>
+        
         <script type="text/javascript">
             var OSCPayment = new OnestepcheckoutPayment({
                 containerSelector: "#onestepcheckout-payment-method",
@@ -72,3 +73,14 @@ $$('input[name="payment[method]"]').each(function(item,index){
 });
 </script>
 
+                 <script type="text/javascript">
+                    $$('input[name="payment[method]"]').find(function(radio) {
+        Event.observe(radio, 'change', function() {
+            if(radio.value == 'Cartão de Crédito') {
+                OSCPayment.forcesavePayment();
+            }
+        });
+    });
+                    
+                    </script>
+   
