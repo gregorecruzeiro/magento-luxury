@@ -1,0 +1,18 @@
+<?php /*if($this->getCurrencyCount() > 0): ?>
+<?php $baseCurrency = Mage::app()->getStore()->getBaseCurrencyCode(); ?>
+<form class="col-md-4 col-sm-6 col-xs-6 lx-form-currency">
+	<div class="select-styled">
+		<select class="minimal" onchange="window.location.href=this.value" name="custom-currency-selector" id="custom-currency-selector">
+			<?php foreach ($this->getCurrencies() as $_code => $_name): ?>
+			<?php $symbol = Mage::app()->getLocale()->currency( $_code )->getSymbol(); ?>
+			<option value="<?php echo $this->getSwitchCurrencyUrl($_code)?>"
+			<?php if($_code == $this->getCurrentCurrencyCode() ): ?>
+            selected="SELECTED"
+			<?php endif; ?>>
+			<?php echo $symbol ?>
+			</option>
+			<?php endforeach; ?>
+		</select>
+	</div>
+</form>
+<?php //endif;*/ ?>

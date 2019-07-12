@@ -1,0 +1,74 @@
+/**
+ * WARNING: Do not change this file. Your changes will be lost.
+ * <?php echo date("Y-m-d H:i:s"); ?>
+ */
+
+<?php
+$helper = Mage::helper('themesetting');
+$d = $helper->getCfgSectionDesign(Mage::registry('cssgen_store'));
+$fonts = $d['general']['font_text'];
+$font_size = $d['general']['font_text_size'];
+$font_titles = $d['general']['font_titles'];
+$color = $d['theme_color']['color'];
+$d_color = '#b1a599';
+$font_title = "Roboto, sans-serif";
+$font = '"Playfair Display", serif';
+switch($font_titles){
+	case "google_font1":
+		$font_title = "Roboto, sans-serif";
+		break;	
+	case "google_font2":
+		$font_title = '"Playfair Display", serif';
+		break;	
+	case "serif":
+		$font_title = "Georgia, Times New Roman, Times, serif";
+		break;	
+	case "sansserif":
+		$font_title = "Arial, Helvetica, sans-serif";
+		break;	
+	case "monospace":
+		$font_title = '"Courier New", Courier, monospace';
+		break;	
+	default:
+		$font_title = "Roboto, sans-serif";	
+}
+switch($fonts){
+	case "google_font1":
+		$font = "Roboto, sans-serif";
+		break;	
+	case "google_font2":
+		$font = '"Playfair Display", serif';
+		break;	
+	case "serif":
+		$font = "Georgia, Times New Roman, Times, serif";
+		break;	
+	case "sansserif":
+		$font = "Arial, Helvetica, sans-serif";
+		break;	
+	case "monospace":
+		$font = '"Courier New", Courier, monospace';
+		break;	
+	default:
+		$font = '"Playfair Display", serif';	
+}
+
+?>
+<?php 
+
+?>
+<?php if(($font_size != "default")||($fonts != "default")):?>
+body {
+	<?php if($font_size != "default"):?>
+	font-size: <?php echo $font_size ?>;
+	<?php endif; ?>
+	<?php if($fonts != "default"):?>
+	font-family: <?php echo $font ?>;
+	<?php endif; ?>
+}
+<?php endif; ?>
+
+<?php if($font_titles != "default"): ?>
+h1, h2, h3, h4, h5, h6, a {
+	font-family: <?php echo $font_title ?>;
+}
+<?php endif; ?>

@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<layout version="0.1.0">
+      
+    <default>
+        <reference name="head">
+            <!-- These 2 below should already be included by Magento, but if not, you need to put them here -->
+   <!--          <action method="addJs"><script>mage/cookies.js</script></action>
+            <block type="page/js_cookie" name="js_cookies" template="page/js/cookie.phtml"/> -->
+            
+            <!-- You can skip the line below if you already have a jquery library of this version or higher added in the head of your site -->
+            <action method="addItem"><type>skin_js</type><name>libraries/jquery.min.js</name></action>
+			<action method="addItem"><type>skin_js</type><name>js/noConflict.js</name></action>
+            <!-- And these are the fancybox files -->
+            <action method="addItem"><type>skin_js</type><name>js/fancybox/jquery.fancybox.pack.js</name></action>
+            <action method="addItem"><type>skin_css</type><name>css/fancybox/jquery.fancybox.css</name></action>
+        </reference>
+	
+        <!-- This line adds our newsletter template at the end of your site's body, remember to replace 'val' to match your folder path -->
+        <!--reference name="before_body_end">
+            <block type="core/template" name="newsletter_popup" as="newsletter_popup" template="cmsmart/newsletter-popup.phtml" />
+        </reference-->
+    </default>
+
+</layout>

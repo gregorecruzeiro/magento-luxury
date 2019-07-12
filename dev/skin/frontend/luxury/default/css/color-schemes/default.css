@@ -1,0 +1,40 @@
+/* rating star */
+.ratings { 
+	font-size:11px;
+	line-height:1.25;
+	margin:7px 0; 
+	margin:5px auto;
+	margin-bottom: 10px;
+}
+.rating-box { 
+	width:60px; 
+	height:13px; 
+	font-size:0; 
+	line-height:0; 
+	background:url(../../images/bgrate.png);
+	background-position: 0 0;
+	background-repeat: no-repeat; 
+	text-indent:-999em; 
+	overflow:hidden; 
+}
+.rating-box .rating { 
+	height:13px; 
+	background:url(../../images/bgrate.png);
+	background-position: 0 -13px;
+	background-repeat: no-repeat; 
+}
+.ratings .rating-box { 
+	margin:5px auto;
+}
+.block-blog .widget_categories .panel-heading a {
+	color: #b1a599;
+ }
+.block-blog .widget_categories .panel-heading a:hover{
+	color: #000;
+}
+.my-account h5.product-name a {
+	color: #000;
+}
+.my-account h5.product-name a:hover {
+	color: #b1a599;
+}

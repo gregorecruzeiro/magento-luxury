@@ -1,0 +1,26 @@
+<?php	
+	$ajaxcart = Mage::getStoreConfig('ajaxcart');
+	$url = Mage::getBaseUrl();
+	$av = @$ajaxcart['viewsetting'];
+if(@$av['enableview']) {
+	//$head = Mage::app()->getLayout()->getBlock('head');
+	//$head->addItem('skin_css', 'cmsmart/ajaxcart/css/default.css');
+	$path_to_skin = Mage::getSingleton('core/design_package')->getPackageName()."/".Mage::getSingleton('core/design_package')->getTheme('frontend');
+?>
+<!-- <link rel="stylesheet" href="<?php //echo $this->getBaseUrl(); ?>skin/frontend/base/default/cmsmart/ajaxcart/css/<?php //echo @$av['themeoptions']?$av['themeoptions']:'default'; ?>.css" type="text/css" /> -->
+<link rel="stylesheet" href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB); ?>skin/frontend/<?php echo $path_to_skin?>/cmsmart/ajaxcart/css/<?php echo @$av['themeoptions']?$av['themeoptions']:'default'; ?>.css" type="text/css" />
+
+<style type="text/css">
+	div#ajaxcart .mini-products-list .product-details{  margin-left: <?php echo @$av['imagewidth'] + 25;?>px;}
+</style>
+
+
+<script type="text/javascript">
+//<![CDATA[
+	var baseUrlAjax = '<?php echo $url; ?>';
+	var cartlinkclass = '<?php echo @$av['linkcartclass']; ?>';
+	var ajaxConfirmMsgDelItem = '<?php echo $this->__('Are you sure you would like to remove this item from the shopping cart?') ?>';
+	var ajaxConfirmMsgEmpty = '<?php echo $this->__('Empty cart?') ?>';
+//]]	
+</script>
+<?php } ?>

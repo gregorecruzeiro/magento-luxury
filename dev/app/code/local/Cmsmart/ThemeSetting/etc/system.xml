@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<config>
+	<tabs>
+		<cmsmart translate="label">
+		  <label>Netbase</label>
+		  <sort_order>000</sort_order>
+		</cmsmart>
+	</tabs>
+	<sections>
+		<themesetting translate="label">
+		        <label>Theme Setting</label>
+				<tab>cmsmart</tab>
+				<class>themesetting-section</class>
+				<frontend_type>text</frontend_type>
+				<sort_order>1000</sort_order>
+				<show_in_default>1</show_in_default>
+				<show_in_website>1</show_in_website>
+				<show_in_store>1</show_in_store>
+				<groups>
+					<general translate="label" module="themesetting">
+						<label>Typography</label>
+						<frontend_type>text</frontend_type>
+						<sort_order>01</sort_order>
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store>
+						<fields>
+							<font_text translate="label">
+								<label>Text Font: </label>
+								<!-- <comment>Custom Source model Font</comment> -->
+								<frontend_type>select</frontend_type>
+								<sort_order>1</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<source_model>themesetting/source_font</source_model>
+							</font_text>
+							<font_text_size translate="label">
+								<label>Text Font Size: </label>
+								<!-- <comment>Source model provider Magento's default Yes/No values</comment> -->
+								<frontend_type>select</frontend_type>
+								<sort_order>2</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<source_model>themesetting/source_fontsize</source_model>
+							</font_text_size>
+							<font_titles translate="label">
+								<label>Titles Font: </label>
+								<comment>Choose the font for Titles</comment>
+								<frontend_type>select</frontend_type>
+								<sort_order>3</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+								<source_model>themesetting/source_font</source_model>
+							</font_titles>
+					    </fields>
+					</general>
+					<product_labels translate="label" module="themesetting">
+						<label>Product Labels</label>
+						<frontend_type>text</frontend_type>
+						<sort_order>02</sort_order>
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store>
+						<fields>
+							<new translate="label">
+								<label>Show "New" Label</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>10</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</new>
+							<sale translate="label">
+								<label>Show "Sale" Label</label>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>20</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</sale>
+						</fields>						
+					</product_labels>
+					<theme_color translate="label">
+						<label>Color Panel</label>
+						<frontend_type>text</frontend_type>
+						<sort_order>03</sort_order>
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store>
+						<fields>
+							<!-- Something here -->
+							<color>
+								<label>Color</label>
+								<comment>
+									<![CDATA[Choose default theme color.]]>
+								</comment>								
+								<frontend_type>select</frontend_type>
+								<source_model>themesetting/source_color</source_model>
+								<sort_order>10</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>							
+							</color>
+						</fields>
+					</theme_color>
+					<install translate="label">
+						<label>Theme Installation</label>
+						<comment>
+							<![CDATA[<strong>IMPORTANT</strong>: To change value of <strong>Overwrite Existing Blocks</strong>, select <em>Yes</em> or <em>No</em> and then save the configuration.<br/>Without saving, the option will remain unchanged after you refresh the page.]]>
+						</comment>
+						<frontend_type>text</frontend_type>
+						<sort_order>04</sort_order>
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store>
+						<fields>
+							<heading_import translate="label">
+								<label>Import</label>
+								<frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+								<sort_order>100</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</heading_import>							
+							<import_blocks translate="label">
+								<label>Static Blocks</label>
+								<comment>
+									<![CDATA[Click this button to create all static blocks provided with this theme.]]>
+								</comment>
+								<frontend_type>button</frontend_type>
+								<frontend_model>themesetting/adminhtml_button_import_cms</frontend_model>
+								<process>blocks</process>
+								<sort_order>110</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</import_blocks>
+							<overwrite_blocks translate="label">
+								<label>Overwrite Existing Blocks</label>
+								<comment>If set to "Yes", imported blocks will overwrite existing blocks with the same identifiers.</comment>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>120</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</overwrite_blocks>
+							
+							<import_pages translate="label">
+								<label>Pages</label>
+								<comment>
+									<![CDATA[Click this button to create CMS pages provided with this theme.]]>
+								</comment>
+								<frontend_type>button</frontend_type>
+								<frontend_model>themesetting/adminhtml_button_import_cms</frontend_model>
+								<process>pages</process>
+								<sort_order>150</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</import_pages>
+							<overwrite_pages translate="label">
+								<label>Overwrite Existing Pages</label>
+								<comment>If set to "Yes", imported pages will overwrite existing pages with the same identifiers.</comment>
+								<frontend_type>select</frontend_type>
+								<source_model>adminhtml/system_config_source_yesno</source_model>
+								<sort_order>160</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</overwrite_pages>
+						</fields>
+					</install>
+					<gmap_about_page translate="label">
+						<label>Gmap</label>
+						<comment>
+							<![CDATA[Get your address(Longitude/Latitude) from <a href="http://www.latlong.net/" target="_blank">http://www.latlong.net/</a> ]]>
+						</comment>						
+						<sort_order>05</sort_order>
+						<frontend_type>text</frontend_type> 
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store> 	
+						<fields>
+							<long translate="label">
+								<label>Longitude</label>
+								<frontend_type>text</frontend_type>					
+								<sort_order>10</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</long>
+							<lat translate="label">
+								<label>Latitude</label>
+								<frontend_type>text</frontend_type>
+								<sort_order>20</sort_order>
+								<show_in_default>1</show_in_default>
+								<show_in_website>1</show_in_website>
+								<show_in_store>1</show_in_store>
+							</lat>
+						</fields>							
+					</gmap_about_page>
+					<NetbaseTeam translate="label" module="themesetting">
+						<label>NetbaseTeam</label>
+						<sort_order>06</sort_order>
+						<frontend_type>text</frontend_type> 
+						<show_in_default>1</show_in_default>
+						<show_in_website>1</show_in_website>
+						<show_in_store>1</show_in_store> 
+						<comment>Theme powered by <![CDATA[<a href="http://netbaseteam.com/" target="_blank" style='text-decoration: none'><font color="#EF1313">NetbaseTeam</font></a>.<br/><br/>]]>Visit our website: <![CDATA[<a href="http://netbaseteam.com/" target="_blank" style='text-decoration: none'><font color="#EF1313">netbaseteam.com</font></a>]]> to view more themes and extension required for your magento store.<![CDATA[<br/><br/>]]> Write ticket and get support from our at: <![CDATA[<a href="http://cmsmart.net/support_ticket/" target="_blank" style='text-decoration: none'><font color="#EF1313">Technical Support - Forum</font></a>.]]>  </comment>					
+					</NetbaseTeam>
+				</groups>
+		</themesetting>
+	</sections>
+</config>

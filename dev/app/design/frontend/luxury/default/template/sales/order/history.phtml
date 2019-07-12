@@ -1,0 +1,79 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<?php $_orders = $this->getOrders(); ?>
+<div class="page-title section-header">
+    <h3><?php echo $this->__('My Orders') ?></h3>
+</div>
+<div class="bottom-shadow contact-form acc-info-dashboard lx-history-order">
+<?php echo $this->getPagerHtml(); ?>
+<?php if($_orders->getSize()): ?>
+<div class="shopping-cart-table">
+<table class="data-table shop_table cart" id="my-orders-table">
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+    <col width="1" />
+    <thead>
+        <tr>
+            <th><?php echo $this->__('PEDIDO #') ?></th>
+            <th class="hidden-xs"><?php echo $this->__('DATA') ?></th>
+            <th class="hidden-xs"><?php echo $this->__('CLIENTE') ?></th>
+            <th><span class="nobr"><?php echo $this->__('TOTAL DO PEDIDO') ?></span></th>
+            <th class="hidden-xs"><span class="nobr"><?php echo $this->__('SITUAÇÃO') ?></span></th>
+            <th><?php echo $this->__('AÇÃO') ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $_odd = ''; ?>
+        <?php foreach ($_orders as $_order): ?>
+        <tr>
+            <td data-title="Order #"><?php echo $_order->getRealOrderId() ?></td>
+            <td data-title="Date"><span class="nobr"><?php echo $this->formatDate($_order->getCreatedAtStoreDate()) ?></span></td>
+            <td data-title="Ship To"><?php echo $_order->getShippingAddress() ? $this->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
+            <td data-title="Order Total"><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
+            <td data-title="Order Status"><em><?php echo $_order->getStatusLabel() ?></em></td>
+            <td class="a-center" data-title="Action">
+                <a href="<?php echo $this->getViewUrl($_order) ?>" title="<?php echo $this->__('View Order') ?>"><span class="product-edit lx-button-action"><i class="fa fa-eye"></i></span></a>
+                    <?php /*<span class="separator">|</span><a href="<?php echo $this->getTrackUrl($_order) ?>"><?php echo $this->__('Track Order') ?></a>&nbsp;*/ ?>
+                    <?php if ($this->helper('sales/reorder')->canReorder($_order)) : ?>
+                    <a href="<?php echo $this->getReorderUrl($_order) ?>" class="link-reorder" title="<?php echo $this->__('Reorder') ?>"><span class="product-edit lx-button-action"><i class="fa fa-undo"></i><h7>Recomprar</h7></span></a>
+                <?php endif ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+<script type="text/javascript">decorateTable('my-orders-table');</script>
+<?php //echo $this->getPagerHtml(); ?>
+<?php else: ?>
+    <p><?php echo $this->__('You have placed no orders.'); ?></p>
+<?php endif ?>
+</div>

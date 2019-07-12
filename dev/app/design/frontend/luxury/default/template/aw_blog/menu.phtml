@@ -1,0 +1,92 @@
+<?php include_once 'helper.php'; ?>
+<div class="block block-blog">
+	<aside class="widget widget_search bottom-shadow">
+		<form method="get" action="#" class="search">
+			<input type="text" required="" class="form-control" placeholder="Enter term to serach" id="lx-search-blog" name="search">
+			<span class="search-icon input-group-btn"><button type="submit" class="btn btn-xlg" id="lx-search-blog-button"><i class="fa fa-search"></i></button></span>
+		</form>
+	</aside>
+	<?php if ($this->getCategories()->count() && Mage::getStoreConfig('blog/menu/category')): ?>
+	<aside class="widget widget_categories bottom-shadow">
+		<h2 class="widget-title"><?php echo Mage::helper('blog')->__('Categories'); ?></h2>
+		<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			<div class="panel panel-default">
+				<?php $cats = $this->getCategories(); ?>
+				<?php foreach ($cats as $cat): ?>
+				<div class="panel-heading" role="tab" >
+					
+					<h4 class="panel-title">
+					<a href="<?php echo $cat->getAddress(); ?>" ><?php echo $cat->getTitle(); ?></a>
+					</h4>
+				</div>
+				<!-- Sub Categories -->
+				<?php endforeach; ?>
+			</div>
+		</div>
+	</aside>  
+	<?php endif; ?>
+	
+	<?php if ($posts = $this->getRecent()): ?>
+	<aside class="widget widget_recent_entries">
+		<h2 class="widget-title"><?php echo Mage::helper('blog')->__('Recent Posts'); ?></h2>
+		<ul>
+			<?php foreach ($posts as $post): ?>
+			<li class="cat-item bottom-shadow">
+				<?php $images = ImageHelper::getInlineImages($post->getShortContent()); ?>
+				<div class="post-thumbnail col-md-3 col-sm-2 col-xs-2"><?php echo $images[0]; ?></div>
+				<div class="latest-post-content col-md-9 col-sm-10 col-xs-10">
+					<h3><a title="Elite Leo" href="<?php echo $post->getAddress(); ?>"><?php echo $post->getTitle(); ?></a></h3>
+					<?php 
+						$arr = explode(" ",$post->getShortContent());
+						$desc = "";
+						$i = 0;
+						do {
+							$desc .= $arr[$i];
+							$desc .= " ";
+							$i++;
+						} while (strlen($desc) <100);
+						$desc = trim($desc);
+						$desc .= "..."; 
+					?>
+										
+					<p><?php echo $desc; ?></p>
+					<a href="<?php echo $post->getAddress(); ?>" class="read-more">Read More</a>						
+				</div>
+			</li>
+			<?php endforeach; ?>
+		</ul>
+	</aside>
+	<?php endif; ?>
+	
+    <?php echo $this->getChildHtml('blog_tags'); ?>
+    
+</div>
+<script type="text/javascript">
+//<![CDATA[
+	jQuery(document).ready(function() {
+		var dest = window.location.href;
+		jQuery( "#lx-search-blog" ).keypress(function(e){
+			if(e.keyCode == 13) {
+				var index_h = dest.indexOf('?');
+				if(index_h != -1){
+					var link3 = dest.slice(0, index_h);
+					dest = link3;
+				}
+				var q = jQuery( "#lx-search-blog" ).val();
+				var link = dest + 'search=' + q;
+				window.location = link;
+			}
+		});
+		jQuery( "#lx-search-blog-button" ).on("click",function(){
+			var q = jQuery( "#lx-search-blog" ).val();
+			var index_h = dest.indexOf('?');
+			if(index_h != -1){
+				var link3 = dest.slice(0, index_h);
+				dest = link3;
+			}
+			var link = dest + 'search=' + q;
+			window.location = link;						
+		});
+	});
+//]]>
+</script>

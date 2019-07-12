@@ -1,0 +1,66 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+/**
+ * Product media data template
+ *
+ * @see Mage_Catalog_Block_Product_View_Media
+ */
+?>
+<?php
+    $_product = $this->getProduct();
+    $_helper = $this->helper('catalog/output');
+?>
+<div class="large-product">
+	<div id="about-carousel" class="col-md-3 col-sm-3 col-xs-3 flexslider product-thumb no-padding">
+		<ul class="slides">
+		<?php if (count($this->getGalleryImages()) > 0): ?>
+		<?php foreach ($this->getGalleryImages() as $_image): ?>
+			<li>
+				<img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(170); ?>" rel="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize(170,170); ?>" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" />
+			</li>
+		<?php endforeach; ?>	
+		<?php endif; ?>
+		</ul>
+	</div>
+	<div id="about-slider" class="flexslider col-md-9 col-sm-9 col-xs-9 product-slider">
+    <?php if($_product->getFinalPrice() < $_product->getPrice()): ?>
+      <span class="tag-promo"><img src="/loja/media/wysiwyg/promo-label.png" title="" alt=""></span>
+    <?php endif; ?>
+		<ul class="slides">
+		    <?php $i=0; foreach ($this->getGalleryImages() as $_image): ?>
+            <?php if ($this->isGalleryImageVisible($_image)): ?>
+			<li>
+            <img id="image-<?php echo $i; ?>"
+                 class="gallery-image magniflier"
+                 src="<?php echo $this->getGalleryImageUrl($_image); ?>"
+                 data-zoom-image="<?php echo  $this->getGalleryImageUrl($_image); ?>" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>"/>
+			</li>
+            <?php endif; ?>
+			<?php $i++; endforeach; ?>	
+		</ul>
+	</div>
+</div>

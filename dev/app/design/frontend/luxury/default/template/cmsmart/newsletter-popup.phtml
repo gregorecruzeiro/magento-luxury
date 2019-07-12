@@ -1,0 +1,61 @@
+<script type="text/javascript">
+
+    jQuery(document).ready(function() {
+
+        var check_cookie = "<?php echo Mage::getModel('core/cookie')->get('popup-shown'); ?>";
+		if (jQuery(window).width() > 768) {
+        if(!check_cookie) {
+            setTimeout(function(){ beginNewsletterForm() }, 3000);
+            <?php Mage::getModel('core/cookie')->set('popup-shown', 'true', 3600);?>
+        }
+		}
+    });
+
+    function beginNewsletterForm () {
+        jQuery.fancybox({
+            'width': '700',
+            'height': '400',
+            'padding': '0px',
+            'autoDimensions': false,
+            'autoScale': false,
+            'autoSize': false,
+            'transitionIn': 'fade',
+            'transitionOut': 'fade',
+            'showCloseButton': false,
+			'closeBtn':false,
+            'type': 'inline',
+            'href': '#newsletter-popup'
+        });
+        jQuery("#newsletter-popup").trigger('click');
+    }
+</script>
+
+<div style="display:none;">
+      <div id="newsletter-popup" class="container-popup">
+            <div class="sub-container-popup">
+				<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('luxury_newsletter_image')->toHtml() ?>				
+				
+                <div class="content-newsletter_popup">
+                        <div class="register-form">
+							<p><?php echo Mage::helper('core')->quoteEscape($this->__('Sign up')) ?><br /><?php echo Mage::helper('core')->quoteEscape($this->__('for our newsletter')) ?></p>
+                               <form id="newsletter-registration-form" action="<?php echo $this->getUrl('newsletter/subscriber/new/') ?>" method="post">
+
+                                    <div class="form-fields-middle">
+                                          <div class="input-wrapper">
+                                                <input name="email" id="cm_email" onfocus="if(this.value=='Enter Your Email') this.value=''" onblur="if(this.value=='') this.value='Enter Your Email'" class="validate-email required-entry field-left" type="text" value="Enter Your Email" />
+                                          </div>
+                                    </div>
+                                    <div class="btn-sign-up-now">
+                                          <input type="submit" class="button" value="Sign Up" />
+                                    </div>
+
+                              </form>
+                        </div>
+                  </div>
+            </div>
+      </div>
+</div>
+
+<script type="text/javascript">
+      var newsletterSubscriberFormDetail = new VarienForm('newsletter-refistration-form', true);
+</script>

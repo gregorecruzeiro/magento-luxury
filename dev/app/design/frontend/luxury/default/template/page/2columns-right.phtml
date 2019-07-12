@@ -1,0 +1,109 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2015 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Template for Mage_Page_Block_Html
+ */
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--[if lt IE 7 ]> <html class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->getLang() ?>" lang="<?php echo $this->getLang() ?>"><!--<![endif]-->
+<head>
+<?php echo $this->getChildHtml('head') ?>
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?> data-offset="200" data-spy="scroll" data-target=".primary-navigation">
+<?php echo $this->getChildHtml('after_body_start') ?>
+	
+<div class="wrapper">
+    <?php echo $this->getChildHtml('global_notices') ?>
+    <div class="page">
+		
+		<!-- LOADER -->
+		<div id="site-loader" class="load-complete">
+			<div class="load-position">
+				<div class="logo"><img src="<?php echo $this->getSkinUrl('images/media/logo.png') ?>" alt="logo"></div>
+				<h6>Aguarde, carregando...</h6>
+				<div class="loading">
+					<div class="loading-line"></div>
+					<div class="loading-break loading-dot-1"></div>
+					<div class="loading-break loading-dot-2"></div>
+					<div class="loading-break loading-dot-3"></div>
+				</div>
+			</div>
+		</div><!-- Loader /- -->
+		<!-- Style Switcher -->
+		<?php /*?><div class="color-switcher" id="choose_color">
+			<a href="#." class="picker_close">
+				<i class="fa fa-gear fa-spin" ></i>
+			</a>
+			<div class="theme-colours">
+				<p>Choose Colour style</p>
+				<ul>
+					<li><a href="#." class="blue" id="default"></a></li>
+					<li><a href="#." class="cyan" id="cyan"></a></li>
+					<li><a href="#." class="dark-blue" id="dark-blue"></a></li>
+					<li><a href="#." class="green" id="green"></a></li>
+					<li><a href="#." class="red" id="red"></a></li>
+					<li><a href="#." class="yellow" id="yellow"></a></li>
+					<li><a href="#." class="light-green" id="light-green"></a></li>
+					<li><a href="#." class="orange" id="orange"></a></li>
+				</ul>
+			</div>
+		</div><?php */?><!-- Style Switcher /- -->
+
+		<a id="top"></a>
+		
+		<!-- Header Section -->
+        <?php echo $this->getChildHtml('header') ?>
+		<!-- Header Section /- -->
+		
+		<!-- Slider Section -->
+		<?php echo $this->getChildHtml('luxury_slider') ?>	
+		<!-- Slider Section /- -->
+		
+        <div class="main-container col1-layout container">
+            <div class="main row">
+                <?php echo $this->getChildHtml('breadcrumbs') ?>
+				<?php echo $this->getChildHtml('luxury_top_block') ?>	
+                <div class="col-main col-md-7 no-padding">
+					<?php echo $this->getChildHtml('global_messages'); ?>
+                    <?php echo $this->getChildHtml('content') ?>
+                </div>
+				<div class="col-left sidebar col-md-4 content-sidebar col-md-offset-1"><?php echo $this->getChildHtml('right') ?></div>
+            </div>
+        </div>
+        <?php echo $this->getChildHtml('footer') ?>
+        <?php echo $this->getChildHtml('global_cookie_notice') ?>
+        <?php echo $this->getChildHtml('before_body_end') ?>
+    </div>
+</div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>

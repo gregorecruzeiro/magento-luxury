@@ -1,0 +1,83 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+?>
+<div class="header-container header" id="header">	
+	<div class="top-header" >		
+		<div class="container">
+			<ul class="top-social col-md-4">
+                <li><a title="Facebook" href="https://www.facebook.com/brutosgf/" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                <li><a title="Instagram" href="https://www.instagram.com/gfbrutoslimeira/" target="_blank"><i class="fa fa-instagram"></i></a></li>
+             </ul>
+        	<ul class="menu-topo-institucional col-md-8">
+		            	<li><a href="https://gfbrutos.com.br/loja/">Início</a></li>
+		                <li><a href="https://gfbrutos.com.br/loja/empresa">Empresa</a></li>
+						<?php if ($this->helper('customer')->isLoggedIn()): ?>
+						<li><a title="Login" href="<?php echo $this->getUrl('customer/account'); ?>"><?php echo $this->__('My Account') ?></a></li>
+						<li><a title="Register" href="<?php echo $this->getUrl('customer/account/logout'); ?>"><?php echo $this->__('Logout') ?></a></li>
+						<?php else: ?>
+						<li><a title="Login" href="<?php echo $this->getUrl('customer/account/login'); ?>"><?php echo $this->__('Login') ?></a></li>
+						<li><a title="Register" href="<?php echo $this->getUrl('customer/account/create'); ?>"><?php echo $this->__('Register') ?></a></li>
+						<?php endif;?>
+						<li><a title="Favoritos" href="<?php echo $this->getUrl('wishlist') ?>"><?php echo $this->__('Favoritos') ?></a></li>
+						<li><a title="Finalizar pedido" href="<?php echo $this->getUrl('checkout/cart'); ?>"><?php echo $this->__('CheckOut') ?></a></li>
+						<li><a href="https://gfbrutos.com.br/loja/contato">Contato</a></li>
+			</ul>
+			
+		</div>
+	</div>
+	
+	<div class="logo-search-block">		
+		<div class="container">
+			<?php echo $this->getChildHtml('topSearch') ?>
+			<div class="col-md-6 logo-block col-sm-6 col-xs-6">
+				<a title="<?php echo $this->getLogoAlt() ?>" href="<?php echo $this->getUrl('') ?>" ><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);?>wysiwyg/media/logo.png" alt="<?php echo $this->getLogoAlt() ?>" /></a>
+				
+			</div>
+			<div class="col-md-3 ow-right-padding col-sm-3 col-xs-3">
+				<?php echo $this->getChildHtml('store_language') ?>
+				<?php echo $this->getChildHtml('custom_currency_selector') ?>	
+				<?php echo $this->getChildHtml('minicart_head') ?>
+			</div>	
+		</div>
+	</div>		
+	<?php echo $this->getChildHtml('topMenu'); ?>
+	
+	<div class="lx-popup-message hidden-xs lx-popup-message-hidden">
+		<div class="lx-popup-container">
+		<p><span class=""><i class="fa fa-exclamation"></i></span>
+		<span id="lx-popup-message-content"> A quantidade solicitada não está disponível. </span></p>
+		</div>
+		<a id="lx-popup-message-close"><i class="fa fa-times"></i></a>
+	</div>
+	<div class="busca-mobile">
+		<?php echo $this->getChildHtml('topSearch') ?>
+	</div>
+
+</div>
+</div>

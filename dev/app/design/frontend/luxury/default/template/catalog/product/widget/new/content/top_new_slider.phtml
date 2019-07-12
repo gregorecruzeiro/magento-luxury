@@ -1,0 +1,29 @@
+<?php if (($_products = $this->getProductCollection()) && $_products->getSize()): 
+	$_products->clear()
+                    ->setPageSize(3)
+                    ->load();
+?>
+<li class="col-md-3 col-sm-6">
+	<ul>
+		<li class="dropdown-header" style="text-align:center"><?php echo $this->__('Novidades') ?></li>                            
+		<li id="mega-dropdown-slider" class="carousel slide mega-dropdown-slider" data-ride="carousel">
+		  <ul class="carousel-inner">
+			<?php  $i=0; foreach ($_products->getItems() as $_product):  ?>
+				<li class="item">
+					<a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(250,150) ?>" width="250" height="150" alt="<?php echo $this->stripTags($_product->getName(), null, true) ?>" class="img-responsive" /></a>
+					<h4 style="text-align:center"><small><?php echo $this->helper('catalog/output')->productAttribute($_product, $_product->getName() , 'name') ?></small></h4>
+                    <div style="width:auto; margin:0 auto; display:table">
+					<button class="btn btn-primary" type="button"><?php $formattedPrice = Mage::helper('core')->currency($_product->getPrice(), true, false);echo $formattedPrice ?></button> 
+					<?php $_wishlistSubmitUrl = $this->helper('wishlist')->getAddUrl($_product); ?>
+					<?php if ($this->helper('wishlist')->isAllow()) : ?>
+						<button  class="btn btn-primary" type="button" onclick="setLocation('<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>')" style="margin-left:10px"><span class="glyphicon glyphicon-heart"></span> <?php echo $this->__('Favoritos') ?></button>
+					<?php endif; ?>
+                    </div>
+				</li><!-- End Item -->
+			<?php endforeach; ?>
+		  </ul><!-- End Carousel Inner -->
+		</li><!-- /.carousel -->
+	</ul>
+</li>
+
+<?php endif; ?>

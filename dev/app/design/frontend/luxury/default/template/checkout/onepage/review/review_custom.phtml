@@ -1,0 +1,43 @@
+<div class="shopping-information lx-div-custom">				
+	<div class="row">
+	<div class="col-md-3 col-sm-3 ">
+		<div class="billing-information">
+			<h2>Billing Information</h2>
+			<div id="lx-review-billing"></div>
+		</div>
+	</div>	
+		
+	<div class="col-md-3 col-sm-3 ">
+		<div class="billing-information">
+			<h2>Shipping Address</h2>
+			<div id="lx-review-address"></div>
+		</div>
+	</div>	
+	<div class="col-md-3 col-sm-3 ">
+		<div class="billing-information">
+			<h2>Shipping Method</h2>
+			<div id="lx-review-method"></div>	
+		</div>
+	</div>
+	<div class="col-md-3 col-sm-3 ">
+		<div class="billing-information">
+			<h2>Payment Method</h2>
+			<div id="lx-review-payment"></div>	
+		</div>
+	</div>
+	</div>
+</div>	
+<script type="text/javascript">
+//<![CDATA[	
+/* 	if(timeVar){
+		clearInterval(timeVar);
+	} */
+	timeVar = setInterval(function(){ getContent() }, 1000);
+	function getContent(){
+		document.getElementById("lx-review-billing").innerHTML = document.getElementById("lx-review-billing1").innerHTML;
+		document.getElementById("lx-review-address").innerHTML = document.getElementById("lx-review-address1").innerHTML;
+		document.getElementById("lx-review-method").innerHTML = document.getElementById("lx-review-method1").innerHTML;
+		document.getElementById("lx-review-payment").innerHTML = document.getElementById("lx-review-payment1").innerHTML;
+	}
+//]]>
+</script>
